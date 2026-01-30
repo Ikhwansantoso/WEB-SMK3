@@ -21,18 +21,7 @@ steps:
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
-      - name: project_folder
-        path: /root/smk3-monitoring
     commands:
-      # 1. Install Git (karena image docker bawaan tidak punya git)
-      - apk add --no-cache git
-
-      # 2. Masuk ke folder server (lewat jalur volume)
-      - cd /root/smk3-monitoring
-
-      # 3. Ambil kodingan terbaru
-      - git pull origin main
-
       # 4. Buat file .env (Pengganti Infisical)
       # Menggunakan 'host.docker.internal' agar jalan di Docker
       - echo "DATABASE_URL=postgresql://postgres:admin123@host.docker.internal:5432/smk3_db?schema=public" > .env
