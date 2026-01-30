@@ -2,39 +2,47 @@ kind: pipeline
 type: docker
 name: default
 
+# =========================================================
+# DEFINISI VOLUME (Jembatan ke Server Asli)
+# =========================================================
+volumes:
+  # 1. Agar Drone bisa memerintah Docker di Server
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+  # 2. Agar Drone bisa masuk ke folder kodingan di Server
+  - name: project_folder
+    host:
+      path: /root/smk3-monitoring
+
 steps:
-  - name: deploy-to-server
-    image: appleboy/drone-ssh
-    settings:
-      # Masukkan 3 data ini di Secret Drone CI
-      host:
-        from_secret: server_host
-      username:
-        from_secret: server_user
-      key:
-        from_secret: ssh_key
-      port: 22
-      script:
-        # 1. Masuk ke folder proyek di server
-        - cd /root/smk3-monitoring 
+  - name: deploy
+    image: docker:latest
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+      - name: project_folder
+        path: /root/smk3-monitoring
+    commands:
+      # 1. Install Git (karena image docker bawaan tidak punya git)
+      - apk add --no-cache git
 
-        # 2. Ambil kodingan terbaru dari GitHub
-        - git pull origin main
+      # 2. Masuk ke folder server (lewat jalur volume)
+      - cd /root/smk3-monitoring
 
-        # ---------------------------------------------------------
-        # 3. BUAT FILE .ENV OTOMATIS (Ini bagian request Anda)
-        # Saya sudah ubah 'localhost' jadi 'host.docker.internal'
-        # agar Docker container bisa tembus ke database host.
-        # ---------------------------------------------------------
-        - echo "DATABASE_URL=postgresql://postgres:admin123@host.docker.internal:5432/smk3_db?schema=public" > .env
-        - echo "NEXTAUTH_URL=http://localhost:3000" >> .env
-        - echo "NEXTAUTH_SECRET=rahasia-random-string-ganti-aja" >> .env
+      # 3. Ambil kodingan terbaru
+      - git pull origin main
 
-        # 4. Matikan container lama
-        - docker compose down
+      # 4. Buat file .env (Pengganti Infisical)
+      # Menggunakan 'host.docker.internal' agar jalan di Docker
+      - echo "DATABASE_URL=postgresql://postgres:admin123@host.docker.internal:5432/smk3_db?schema=public" > .env
+      - echo "NEXTAUTH_URL=http://localhost:3000" >> .env
+      - echo "NEXTAUTH_SECRET=rahasia-random-string-ganti-aja" >> .env
 
-        # 5. Build ulang & Jalankan
-        - docker compose up -d --build
+      # 5. Eksekusi Docker (Sesuai referensi Anda)
+      - docker compose down
+      - docker system prune -f  # Hapus cache/image gantung biar hemat storage
+      - docker compose up -d --build
 
 trigger:
   branch:
