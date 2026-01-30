@@ -1,0 +1,41 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: deploy-to-server
+    image: appleboy/drone-ssh
+    settings:
+      # Masukkan 3 data ini di Secret Drone CI
+      host:
+        from_secret: server_host
+      username:
+        from_secret: server_user
+      key:
+        from_secret: ssh_key
+      port: 22
+      script:
+        # 1. Masuk ke folder proyek di server
+        - cd /root/smk3-monitoring 
+
+        # 2. Ambil kodingan terbaru dari GitHub
+        - git pull origin main
+
+        # ---------------------------------------------------------
+        # 3. BUAT FILE .ENV OTOMATIS (Ini bagian request Anda)
+        # Saya sudah ubah 'localhost' jadi 'host.docker.internal'
+        # agar Docker container bisa tembus ke database host.
+        # ---------------------------------------------------------
+        - echo "DATABASE_URL=postgresql://postgres:admin123@host.docker.internal:5432/smk3_db?schema=public" > .env
+        - echo "NEXTAUTH_URL=http://localhost:3000" >> .env
+        - echo "NEXTAUTH_SECRET=rahasia-random-string-ganti-aja" >> .env
+
+        # 4. Matikan container lama
+        - docker compose down
+
+        # 5. Build ulang & Jalankan
+        - docker compose up -d --build
+
+trigger:
+  branch:
+    - main

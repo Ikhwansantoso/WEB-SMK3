@@ -1,0 +1,142 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// 1. MANAJEMEN USER (SDM K3)
+// ==========================================
+model User {
+  id                String              @id @default(cuid())
+  email             String              @unique
+  name              String?
+  role              Role                @default(PEGAWAI)
+  password          String              @default("123456")
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  temuanAudit       TemuanAudit[]
+  laporanKecelakaan LaporanKecelakaan[]
+}
+
+enum Role {
+  ADMIN
+  AUDITOR
+  PEGAWAI
+}
+
+// ==========================================
+// 2. REPOSITORY DOKUMEN (IPBR FILE)
+// ==========================================
+model Divisi {
+  id      String    @id @default(cuid())
+  nama    String    // Contoh: "MECHANICAL ELECTRICAL"
+  dokumen Dokumen[] 
+}
+
+model Dokumen {
+  id           String   @id @default(cuid())
+  judul        String   // Contoh: "IBPR - Pengisian BBM Genset"
+  nomorDokumen String?  // Opsional: No Dokumen
+  fileUrl      String?  // Link ke file PDF
+  
+  divisiId     String
+  divisi       Divisi   @relation(fields: [divisiId], references: [id])
+  
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+}
+
+// ==========================================
+// 3. AUDIT SMK3 & TEMUAN (LAPOR AUDIT)
+// ==========================================
+model TemuanAudit {
+  id           String         @id @default(uuid())
+  judul        String
+  deskripsi    String
+  lokasi       String
+  kategori     KategoriTemuan @default(MINOR) // Default MINOR
+  buktiFoto    String?
+  status       StatusTemuan   @default(OPEN)
+  
+  // Update: Deadline jadi opsional (Diisi Admin nanti)
+  deadline     DateTime?      
+  
+  // Update: Tambah Waktu Temuan Manual (Inputan Pegawai)
+  waktuTemuan  DateTime       @default(now()) 
+
+  // Update: Auditor/Pelapor jadi opsional (Biar pegawai bisa lapor tanpa login ribet)
+  auditorId    String?
+  auditor      User?          @relation(fields: [auditorId], references: [id])
+  
+  kondisi      Kondisi        @default(BUTUH_PERBAIKAN)
+  
+  createdAt    DateTime       @default(now())
+}
+
+enum KategoriTemuan {
+  KRITIKAL
+  MAYOR
+  MINOR
+}
+
+enum Kondisi {
+  AMAN
+  BUTUH_PERBAIKAN
+}
+
+enum StatusTemuan {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+// ==========================================
+// 4. PELAPORAN KECELAKAAN (INSIDEN)
+// ==========================================
+model LaporanKecelakaan {
+  id            String   @id @default(uuid())
+  judul         String   // Judul Insiden
+  lokasi        String
+  waktuKejadian DateTime // Wajib isi jam & tanggal kejadian
+  kronologi     String   @db.Text
+  korban        String?  // Nama korban (opsional)
+  fotoBukti     String?  // Foto kondisi (opsional)
+  status        String   @default("OPEN") // OPEN, INVESTIGASI, CLOSED
+  
+  // Pelapor jadi opsional
+  pelaporId     String?
+  pelapor       User?    @relation(fields: [pelaporId], references: [id])
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ==========================================
+// 5. MONITORING LAPORAN BULANAN
+// ==========================================
+model Witel {
+  id      Int       @id @default(autoincrement())
+  nama    String
+  laporan Laporan[]
+}
+
+model Laporan {
+  id         Int      @id @default(autoincrement())
+  witelId    Int
+  bulanIndex Int      // 0 = Jan, 1 = Feb, dst
+  tahun      Int
+  status     Int      // 1 = Ada, 2 = Telat
+  fileName   String
+  fileUrl    String
+  uploadedAt DateTime @default(now())
+
+  witel      Witel    @relation(fields: [witelId], references: [id])
+
+  @@unique([witelId, bulanIndex, tahun])
+}

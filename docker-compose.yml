@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: smk3-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "1817:3000"
+    environment:
+      # PENTING: Ganti 'localhost' jadi 'host.docker.internal'
+      # Sesuaikan USER, PASSWORD, dan NAMA_DB dengan settingan postgres laptop Anda
+      DATABASE_URL: "postgresql://postgres:admin123@host.docker.internal:5432/smk3_db?schema=public"
+
+      # Jika pakai NextAuth, set URL-nya
+      NEXTAUTH_URL: "http://localhost:3000"
+      NEXTAUTH_SECRET: "rahasia-random-string"
+
+    volumes:
+      # Mapping folder upload agar file PDF tersimpan di laptop (bukan di dalam container)
+      - ./public/uploads:/app/public/uploads
+
+# Kita hapus bagian 'services: db' dan 'volumes: pgdata' karena sudah pakai punya laptop.
