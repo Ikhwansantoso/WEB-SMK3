@@ -105,10 +105,10 @@ export default function ArsipPage() {
           filename: `Surat_${item.nomor.replace(/[^a-zA-Z0-9]/g, "-")}.pdf`,
           image: { type: "jpeg", quality: 0.98 },
           html2canvas: {
-            scale: 2, 
-            useCORS: true, 
+            scale: 2,
+            useCORS: true,
             scrollY: 0,
-            windowWidth: 1200, 
+            windowWidth: 1200,
             letterRendering: true,
             // Abaikan CSS global biar tidak error lab/oklch
             ignoreElements: (node: any) => node.tagName === 'STYLE' || node.tagName === 'LINK',
@@ -184,16 +184,21 @@ _Dokumen PDF terlampir._
     }, 1500);
   };
 
-  // --- PRINT MANUAL ---
+  // --- PRINT MANUAL (FIXED) ---
+  const handlePrint = useReactToPrint({
+    contentRef: printComponentRef,
+    documentTitle: printData?.nomorSurat
+      ? `Surat_${printData.nomorSurat.replace(/[^a-zA-Z0-9]/g, "-")}`
+      : "Surat_SMK3",
+  });
+
   const handleDownloadClick = (item: any) => {
     const dataToPrint = { ...item.data, savedTemplateType: item.type };
     setPrintData(dataToPrint);
+
+    // Tunggu render selesai baru print
     setTimeout(() => {
-        const handlePrint = useReactToPrint({
-            contentRef: printComponentRef,
-            documentTitle: `Surat_${item.nomor.replace(/[^a-zA-Z0-9]/g, "-")}`,
-        });
-        handlePrint();
+      handlePrint();
     }, 500);
   };
 
@@ -353,11 +358,10 @@ _Dokumen PDF terlampir._
                 <div className="flex-1 w-full">
                   <div className="flex items-center gap-2 mb-2">
                     <span
-                      className={`text-[10px] font-bold px-2 py-1 rounded border ${
-                        item.type === "UNDANGAN"
+                      className={`text-[10px] font-bold px-2 py-1 rounded border ${item.type === "UNDANGAN"
                           ? "bg-red-50 text-red-600 border-red-100"
                           : "bg-green-50 text-green-600 border-green-100"
-                      }`}
+                        }`}
                     >
                       {item.type}
                     </span>
@@ -443,61 +447,61 @@ function SuratTemplate({ data }: { data: any }) {
   const logoUrl = "/Telkom-logo-fu.png";
 
   const styles = {
-    page: { 
-        backgroundColor: "white", 
-        width: "210mm", 
-        padding: "20mm", 
-        color: "black", 
-        fontFamily: "Arial, sans-serif", 
-        fontSize: "11pt", 
-        lineHeight: "1.15", 
-        position: "relative" as "relative",
-        boxSizing: "border-box" as "border-box",
+    page: {
+      backgroundColor: "white",
+      width: "210mm",
+      padding: "20mm",
+      color: "black",
+      fontFamily: "Arial, sans-serif",
+      fontSize: "11pt",
+      lineHeight: "1.15",
+      position: "relative" as "relative",
+      boxSizing: "border-box" as "border-box",
     },
     borderTable: { border: "1px solid black", borderCollapse: "collapse" as "collapse", width: "100%", fontSize: "10pt" },
     cell: { border: "1px solid black", padding: "4px", verticalAlign: "top" },
-    logo: { height: "70px", width: "auto", objectFit: "contain" as "contain", marginRight: "5px" }, 
-    
+    logo: { height: "70px", width: "auto", objectFit: "contain" as "contain", marginRight: "5px" },
+
     // STYLE KHUSUS HEADER TABLE
     headerTable: {
-        width: "100%",
-        borderCollapse: "collapse" as "collapse",
-        marginBottom: "1rem",
-        fontSize: "11pt",
-        border: "none",
+      width: "100%",
+      borderCollapse: "collapse" as "collapse",
+      marginBottom: "1rem",
+      fontSize: "11pt",
+      border: "none",
     },
     headerCellLabel: {
-        width: "90px", // Lebar kolom label
-        verticalAlign: "top",
-        paddingBottom: "2px",
+      width: "90px", // Lebar kolom label
+      verticalAlign: "top",
+      paddingBottom: "2px",
     },
     headerCellColon: {
-        width: "15px", // Lebar kolom titik dua
-        verticalAlign: "top",
-        paddingBottom: "2px",
+      width: "15px", // Lebar kolom titik dua
+      verticalAlign: "top",
+      paddingBottom: "2px",
     },
     headerCellValue: {
-        verticalAlign: "top",
-        paddingBottom: "2px",
+      verticalAlign: "top",
+      paddingBottom: "2px",
     },
-    
+
     watermark: {
-        position: "absolute" as "absolute",
-        inset: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 0,
-        pointerEvents: "none" as "none",
-        overflow: "hidden"
+      position: "absolute" as "absolute",
+      inset: 0,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 0,
+      pointerEvents: "none" as "none",
+      overflow: "hidden"
     },
     watermarkText: {
-        color: "#cbd5e1",
-        fontSize: "80pt",
-        fontWeight: "800",
-        transform: "rotate(-45deg)",
-        opacity: 0.4,
-        userSelect: "none" as "none"
+      color: "#cbd5e1",
+      fontSize: "80pt",
+      fontWeight: "800",
+      transform: "rotate(-45deg)",
+      opacity: 0.4,
+      userSelect: "none" as "none"
     }
   };
 
@@ -514,7 +518,7 @@ function SuratTemplate({ data }: { data: any }) {
       {!isLaporan ? (
         // --- UNDANGAN ---
         <div style={{ position: "relative", zIndex: 10 }}>
-          
+
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
             <h1 style={{ fontSize: "1.5rem", fontWeight: "bold", marginTop: "0.5rem", fontFamily: "Arial", margin: 0 }}>
               Notadinas
@@ -530,31 +534,31 @@ function SuratTemplate({ data }: { data: any }) {
           {/* 🔥 GANTI GRID DENGAN TABEL AGAR LURUS SEMPURNA 🔥 */}
           <table style={styles.headerTable}>
             <tbody>
-                <tr>
-                    <td style={styles.headerCellLabel}>Nomor</td>
-                    <td style={styles.headerCellColon}>:</td>
-                    <td style={styles.headerCellValue}>{data.nomorSurat}</td>
-                </tr>
-                <tr>
-                    <td style={styles.headerCellLabel}>Kepada</td>
-                    <td style={styles.headerCellColon}>:</td>
-                    <td style={styles.headerCellValue}>{data.kepada}</td>
-                </tr>
-                <tr>
-                    <td style={styles.headerCellLabel}>Dari</td>
-                    <td style={styles.headerCellColon}>:</td>
-                    <td style={styles.headerCellValue}>{data.dari}</td>
-                </tr>
-                <tr>
-                    <td style={styles.headerCellLabel}>Lampiran</td>
-                    <td style={styles.headerCellColon}>:</td>
-                    <td style={styles.headerCellValue}>{data.lampiran}</td>
-                </tr>
-                <tr>
-                    <td style={styles.headerCellLabel}>Perihal</td>
-                    <td style={styles.headerCellColon}>:</td>
-                    <td style={{ ...styles.headerCellValue, fontWeight: "bold" }}>{data.perihal}</td>
-                </tr>
+              <tr>
+                <td style={styles.headerCellLabel}>Nomor</td>
+                <td style={styles.headerCellColon}>:</td>
+                <td style={styles.headerCellValue}>{data.nomorSurat}</td>
+              </tr>
+              <tr>
+                <td style={styles.headerCellLabel}>Kepada</td>
+                <td style={styles.headerCellColon}>:</td>
+                <td style={styles.headerCellValue}>{data.kepada}</td>
+              </tr>
+              <tr>
+                <td style={styles.headerCellLabel}>Dari</td>
+                <td style={styles.headerCellColon}>:</td>
+                <td style={styles.headerCellValue}>{data.dari}</td>
+              </tr>
+              <tr>
+                <td style={styles.headerCellLabel}>Lampiran</td>
+                <td style={styles.headerCellColon}>:</td>
+                <td style={styles.headerCellValue}>{data.lampiran}</td>
+              </tr>
+              <tr>
+                <td style={styles.headerCellLabel}>Perihal</td>
+                <td style={styles.headerCellColon}>:</td>
+                <td style={{ ...styles.headerCellValue, fontWeight: "bold" }}>{data.perihal}</td>
+              </tr>
             </tbody>
           </table>
 
@@ -646,7 +650,7 @@ function SuratTemplate({ data }: { data: any }) {
       ) : (
         // --- LAPORAN ---
         <div style={{ position: "relative", zIndex: 10, fontSize: "10pt" }}>
-          
+
           <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
             <img
               src={logoUrl}
@@ -659,11 +663,11 @@ function SuratTemplate({ data }: { data: any }) {
           {/* TABEL HEADER LAPORAN */}
           <table style={styles.headerTable}>
             <tbody>
-                <tr>
-                    <td style={styles.headerCellLabel}>Nomor</td>
-                    <td style={styles.headerCellColon}>:</td>
-                    <td style={styles.headerCellValue}>{data.nomorSurat}</td>
-                </tr>
+              <tr>
+                <td style={styles.headerCellLabel}>Nomor</td>
+                <td style={styles.headerCellColon}>:</td>
+                <td style={styles.headerCellValue}>{data.nomorSurat}</td>
+              </tr>
             </tbody>
           </table>
 
@@ -672,29 +676,29 @@ function SuratTemplate({ data }: { data: any }) {
           </div>
 
           <div style={{ marginTop: "0.5rem" }}>
-              <p>Kepada</p>
-              <p>
-                Yth. <strong>{data.dinas}</strong>
-              </p>
-              <p style={{ fontWeight: "bold" }}>{data.dinasProv}</p>
-              <p style={{ maxWidth: "300px", whiteSpace: "pre-wrap" }}>
-                {data.alamatDinas}
-              </p>
+            <p>Kepada</p>
+            <p>
+              Yth. <strong>{data.dinas}</strong>
+            </p>
+            <p style={{ fontWeight: "bold" }}>{data.dinasProv}</p>
+            <p style={{ maxWidth: "300px", whiteSpace: "pre-wrap" }}>
+              {data.alamatDinas}
+            </p>
           </div>
 
           {/* TABEL HEADER BAWAH LAPORAN */}
           <table style={{ ...styles.headerTable, marginTop: "1rem" }}>
             <tbody>
-                <tr>
-                    <td style={styles.headerCellLabel}>Lampiran</td>
-                    <td style={styles.headerCellColon}>:</td>
-                    <td style={styles.headerCellValue}>{data.lampiran}</td>
-                </tr>
-                <tr>
-                    <td style={styles.headerCellLabel}>Perihal</td>
-                    <td style={styles.headerCellColon}>:</td>
-                    <td style={{ ...styles.headerCellValue, fontWeight: "bold" }}>{data.perihal}</td>
-                </tr>
+              <tr>
+                <td style={styles.headerCellLabel}>Lampiran</td>
+                <td style={styles.headerCellColon}>:</td>
+                <td style={styles.headerCellValue}>{data.lampiran}</td>
+              </tr>
+              <tr>
+                <td style={styles.headerCellLabel}>Perihal</td>
+                <td style={styles.headerCellColon}>:</td>
+                <td style={{ ...styles.headerCellValue, fontWeight: "bold" }}>{data.perihal}</td>
+              </tr>
             </tbody>
           </table>
 
@@ -788,7 +792,7 @@ function SuratTemplate({ data }: { data: any }) {
                 </td>
                 <td style={styles.cell}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
-                    <CheckSquare size={12} color="black" /> 
+                    <CheckSquare size={12} color="black" />
                     <span>a. Program K3 : Ada</span>
                   </div>
                   <div style={{ fontWeight: "bold", marginBottom: "0.25rem" }}>

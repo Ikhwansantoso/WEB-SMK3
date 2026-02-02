@@ -22,4 +22,8 @@ services:
       # Mapping folder upload agar file PDF tersimpan di laptop (bukan di dalam container)
       - ./public/uploads:/app/public/uploads
 
+    # PENTING: Tambahan agar 'host.docker.internal' jalan di server Linux (Ubuntu/CentOS)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 # Kita hapus bagian 'services: db' dan 'volumes: pgdata' karena sudah pakai punya laptop.
