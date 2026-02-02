@@ -16,6 +16,9 @@ COPY . .
 # Generate Prisma Client (Akan membaca binaryTargets baru)
 RUN npx prisma generate
 
+# Compile Seed Script to JS
+RUN npx tsc -p prisma/tsconfig.seed.json
+
 RUN npm run build
 
 # STAGE 3: Production Runner
@@ -28,7 +31,7 @@ ENV NODE_ENV production
 # TAMBAHKAN 'openssl' JUGA DI SINI (Wajib untuk runtime)
 RUN apk add --no-cache openssl
 # Install Prisma CLI globally untuk runtime migration
-RUN npm install -g prisma@5.22.0 ts-node typescript
+RUN npm install -g prisma@5.22.0
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -50,4 +53,4 @@ EXPOSE 3000
 ENV PORT 3000
 
 # Jalankan migrasi sebelum start server
-CMD ["/bin/sh", "-c", "npx prisma migrate deploy && npx prisma db seed && node server.js"]
+CMD ["/bin/sh", "-c", "npx prisma migrate deploy && node prisma/seed.js && node server.js"]
