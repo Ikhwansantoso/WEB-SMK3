@@ -12,7 +12,7 @@ services:
     environment:
       # PENTING: Ganti 'localhost' jadi 'host.docker.internal'
       # Sesuaikan USER, PASSWORD, dan NAMA_DB dengan settingan postgres laptop Anda
-      DATABASE_URL: "postgresql://postgres:admin123@host.docker.internal:5432/smk3_db?schema=public"
+      DATABASE_URL: "postgresql://magang:6wx3pVKuM39AwAE2H1ObKeP8@host.docker.internal:5432/smk3_db?schema=public"
 
       # Jika pakai NextAuth, set URL-nya
       NEXTAUTH_URL: "http://localhost:3000"
