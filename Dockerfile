@@ -28,7 +28,7 @@ ENV NODE_ENV production
 # TAMBAHKAN 'openssl' JUGA DI SINI (Wajib untuk runtime)
 RUN apk add --no-cache openssl
 # Install Prisma CLI globally untuk runtime migration
-RUN npm install -g prisma@5.22.0
+RUN npm install -g prisma@5.22.0 ts-node typescript
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
