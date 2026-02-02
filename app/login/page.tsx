@@ -17,12 +17,12 @@ export default function LoginPage() {
     }
 
     const cookieStore = await cookies();
-    
+
     // 1. Simpan Role
     cookieStore.set("user_role", user.role);
     // 2. Simpan ID
     cookieStore.set("user_id", user.id.toString());
-    
+
     // 3. (BARU) Simpan Nama Asli User biar bisa dipanggil "Halo, Ikhwan"
     cookieStore.set("user_name", user.name || "User");
     // Redirect sesuai Role
