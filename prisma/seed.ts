@@ -7,34 +7,40 @@ async function main() {
   console.log('🌱 Start seeding...')
 
   // ==========================================
-  // 0. BERSIHKAN DATA LAMA (RESET TOTAL)
+  // 0. CEK DATA EKSISTING (IDEMPOTENCY)
   // ==========================================
-  // Hapus data dokumen & divisi (Schema Baru)
-  await prisma.dokumen.deleteMany()
-  await prisma.divisi.deleteMany()
+  // Jika sudah ada user, asumsikan DB sudah diseed sebelumnya.
+  const userCount = await prisma.user.count();
+  if (userCount > 0) {
+    console.log('⚠️  Data found (Users exist). Skipping seed process to preserve data.');
+    return;
+  }
 
-  // Hapus data monitoring & audit
-  await prisma.laporan.deleteMany()
-  await prisma.witel.deleteMany()
-  await prisma.temuanAudit.deleteMany()
-  await prisma.laporanKecelakaan.deleteMany()
-  
-  // Hapus user
-  await prisma.user.deleteMany()
+  console.log('🧹 Database empty. Starting fresh seed...');
 
-  console.log('🧹 Database cleaned')
+  // Clean up just in case (optional, but good for partial failures if any)
+  // Note: We only delete if we are sure we want to re-seed (which we are here)
+  await prisma.dokumen.deleteMany();
+  await prisma.divisi.deleteMany();
+  await prisma.laporan.deleteMany();
+  await prisma.witel.deleteMany();
+  await prisma.temuanAudit.deleteMany();
+  await prisma.laporanKecelakaan.deleteMany();
+  await prisma.user.deleteMany();
+
+  console.log('🧹 Database cleaned for fresh seed');
 
   // ==========================================
   // 1. BUAT USER (SDM)
   // ==========================================
-  
+
   // A. ADMIN
   const admin = await prisma.user.create({
     data: {
       email: 'admin@telkom.co.id',
       name: 'Super Admin Telkom',
       role: Role.ADMIN,
-      password: 'admin', 
+      password: 'admin',
     },
   })
 
@@ -63,67 +69,67 @@ async function main() {
   // ==========================================
   // 2. BUAT DATA IPBR (VERSI REPOSITORY DOKUMEN)
   // ==========================================
-  
+
   // DIVISI 1: ME (Mechanical Electrical)
   await prisma.divisi.create({
     data: {
-        nama: 'MECHANICAL ELECTRICAL (ME)',
-        dokumen: {
-            create: [
-                {
-                    judul: 'IBPR - Pengisian BBM Solar Tangki Harian',
-                    nomorDokumen: 'ME-01-BBM',
-                    fileUrl: '#', // Nanti diganti link PDF asli
-                },
-                {
-                    judul: 'IBPR - Perawatan Genset Rutin',
-                    nomorDokumen: 'ME-02-GENSET',
-                    fileUrl: '#',
-                },
-                {
-                    judul: 'IBPR - Pengecekan Panel Listrik (PUTR)',
-                    nomorDokumen: 'ME-03-PANEL',
-                    fileUrl: '#',
-                }
-            ]
-        }
+      nama: 'MECHANICAL ELECTRICAL (ME)',
+      dokumen: {
+        create: [
+          {
+            judul: 'IBPR - Pengisian BBM Solar Tangki Harian',
+            nomorDokumen: 'ME-01-BBM',
+            fileUrl: '#', // Nanti diganti link PDF asli
+          },
+          {
+            judul: 'IBPR - Perawatan Genset Rutin',
+            nomorDokumen: 'ME-02-GENSET',
+            fileUrl: '#',
+          },
+          {
+            judul: 'IBPR - Pengecekan Panel Listrik (PUTR)',
+            nomorDokumen: 'ME-03-PANEL',
+            fileUrl: '#',
+          }
+        ]
+      }
     }
   })
 
   // DIVISI 2: ASSET MANAGEMENT
   await prisma.divisi.create({
     data: {
-        nama: 'ASSET MANAGEMENT',
-        dokumen: {
-            create: [
-                {
-                    judul: 'IBPR - Perbaikan Atap Bocor',
-                    nomorDokumen: 'AST-01-ROOF',
-                    fileUrl: '#',
-                },
-                {
-                    judul: 'IBPR - Cleaning Service Lobby',
-                    nomorDokumen: 'AST-02-CS',
-                    fileUrl: '#',
-                }
-            ]
-        }
+      nama: 'ASSET MANAGEMENT',
+      dokumen: {
+        create: [
+          {
+            judul: 'IBPR - Perbaikan Atap Bocor',
+            nomorDokumen: 'AST-01-ROOF',
+            fileUrl: '#',
+          },
+          {
+            judul: 'IBPR - Cleaning Service Lobby',
+            nomorDokumen: 'AST-02-CS',
+            fileUrl: '#',
+          }
+        ]
+      }
     }
   })
 
   // DIVISI 3: SECURITY
   await prisma.divisi.create({
     data: {
-        nama: 'SECURITY & SAFETY',
-        dokumen: {
-            create: [
-                {
-                    judul: 'IBPR - Penjagaan Pos Utama',
-                    nomorDokumen: 'SEC-01-GATE',
-                    fileUrl: '#',
-                }
-            ]
-        }
+      nama: 'SECURITY & SAFETY',
+      dokumen: {
+        create: [
+          {
+            judul: 'IBPR - Penjagaan Pos Utama',
+            nomorDokumen: 'SEC-01-GATE',
+            fileUrl: '#',
+          }
+        ]
+      }
     }
   })
 
@@ -138,7 +144,7 @@ async function main() {
       deskripsi: 'Ditemukan 2 tabung APAR di lorong utama sudah melewati masa expired.',
       lokasi: 'Lobby Utama',
       kategori: KategoriTemuan.MAYOR,
-      status: StatusTemuan.OPEN, 
+      status: StatusTemuan.OPEN,
       deadline: new Date(new Date().setDate(new Date().getDate() + 30)),
       auditorId: auditor.id,
     }

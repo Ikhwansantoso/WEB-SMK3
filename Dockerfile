@@ -49,4 +49,4 @@ EXPOSE 3000
 ENV PORT 3000
 
 # Jalankan migrasi sebelum start server
-CMD ["/bin/sh", "-c", "npx prisma migrate deploy && node server.js"]
+CMD ["/bin/sh", "-c", "npx prisma migrate deploy && npx prisma db seed && node server.js"]
