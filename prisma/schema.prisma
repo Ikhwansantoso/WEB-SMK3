@@ -30,27 +30,7 @@ enum Role {
   PEGAWAI
 }
 
-// ==========================================
-// 2. REPOSITORY DOKUMEN (IPBR FILE)
-// ==========================================
-model Divisi {
-  id      String    @id @default(cuid())
-  nama    String    // Contoh: "MECHANICAL ELECTRICAL"
-  dokumen Dokumen[] 
-}
 
-model Dokumen {
-  id           String   @id @default(cuid())
-  judul        String   // Contoh: "IBPR - Pengisian BBM Genset"
-  nomorDokumen String?  // Opsional: No Dokumen
-  fileUrl      String?  // Link ke file PDF
-  
-  divisiId     String
-  divisi       Divisi   @relation(fields: [divisiId], references: [id])
-  
-  updatedAt    DateTime @updatedAt
-  createdAt    DateTime @default(now())
-}
 
 // ==========================================
 // 3. AUDIT SMK3 & TEMUAN (LAPOR AUDIT)
