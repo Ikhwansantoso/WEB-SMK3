@@ -24,7 +24,7 @@ steps:
     commands:
       # 4. Buat file .env (Pengganti Infisical)
       # Menggunakan 'host.docker.internal' agar jalan di Docker
-      - echo "DATABASE_URL=postgresql://postgres:admin123@host.docker.internal:5432/smk3_db?schema=public" > .env
+      - echo "DATABASE_URL=postgresql://magang:6wx3pVKuM39AwAE2H1ObKeP8@host.docker.internal:5432/smk3_db?schema=public" > .env
       - echo "NEXTAUTH_URL=http://localhost:3000" >> .env
       - echo "NEXTAUTH_SECRET=rahasia-random-string-ganti-aja" >> .env
 

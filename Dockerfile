@@ -25,12 +25,18 @@ WORKDIR /app
 ENV NODE_ENV production
 
 # TAMBAHKAN 'openssl' JUGA DI SINI (Wajib untuk runtime)
+# TAMBAHKAN 'openssl' JUGA DI SINI (Wajib untuk runtime)
 RUN apk add --no-cache openssl
+# Install Prisma CLI globally untuk runtime migration
+RUN npm install -g prisma
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
+# Copy folder prisma agar bisa dijalankan migrate deploy
+COPY --from=builder /app/prisma ./prisma
+
 RUN mkdir -p ./public/uploads
 RUN chown nextjs:nodejs ./public/uploads
 
@@ -42,4 +48,5 @@ USER nextjs
 EXPOSE 3000
 ENV PORT 3000
 
-CMD ["node", "server.js"]
+# Jalankan migrasi sebelum start server
+CMD ["/bin/sh", "-c", "npx prisma migrate deploy && node server.js"]
