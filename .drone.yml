@@ -39,8 +39,6 @@ steps:
       - docker compose down
       - docker system prune -f  # Hapus cache/image gantung biar hemat storage
       - docker compose up -d --build
-      # 6. Jalankan migrasi eksplisit agar tercatat di log Drone (dan error jika gagal)
-      - docker compose exec -T app npx prisma migrate deploy
 
 trigger:
   branch:
