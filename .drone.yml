@@ -26,6 +26,16 @@ steps:
     commands:
       # Pindah file dari runner ke folder server asli agar persistent
       - mkdir -p /root/smk3-monitoring
+      
+      # BERSIHKAN file lama agar file yang dihapus di git juga hilang di server
+      # Kita hapus folder code utama. JANGAN hapus 'public/uploads' atau .env secara membabi buta.
+      - rm -rf /root/smk3-monitoring/app
+      - rm -rf /root/smk3-monitoring/lib
+      - rm -rf /root/smk3-monitoring/components
+      - rm -rf /root/smk3-monitoring/prisma
+      # Opsional: hapus public tapi hati-hati dengan uploads jika ada di situ (biasanya aman karena di-mount volume, tapi jaga-jaga)
+      # - rm -rf /root/smk3-monitoring/public 
+
       - cp -rT . /root/smk3-monitoring
       - cd /root/smk3-monitoring
 
