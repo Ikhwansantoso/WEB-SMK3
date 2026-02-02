@@ -36,6 +36,7 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 # Copy folder prisma agar bisa dijalankan migrate deploy
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
 RUN mkdir -p ./public/uploads
 RUN chown nextjs:nodejs ./public/uploads

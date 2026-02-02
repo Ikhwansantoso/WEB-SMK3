@@ -21,7 +21,14 @@ steps:
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
+      - name: project_folder
+        path: /root/smk3-monitoring
     commands:
+      # Pindah file dari runner ke folder server asli agar persistent
+      - mkdir -p /root/smk3-monitoring
+      - cp -rT . /root/smk3-monitoring
+      - cd /root/smk3-monitoring
+
       # 4. Buat file .env (Pengganti Infisical)
       # Menggunakan 'host.docker.internal' agar jalan di Docker
       - echo "DATABASE_URL=postgresql://magang:6wx3pVKuM39AwAE2H1ObKeP8@host.docker.internal:5432/smk3_db?schema=public" > .env
