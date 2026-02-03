@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { toPng } from "html-to-image";
+import jsPDF from "jspdf";
 import {
   Search,
   Trash2,
@@ -76,14 +78,14 @@ export default function ArsipPage() {
     }
   };
 
-  // 🔥 FUNGSI GENERATE PDF (ANTI ERROR OPT & ALIGNMENT FIX) 🔥
+  // 🔥 FUNGSI GENERATE PDF (HIGH QUALITY - JS PDF + HTML TO IMAGE) 🔥
   const generateAndSendPDF = async (
     item: any,
     token: string,
     chatId: string
   ) => {
     setIsSending(true);
-    setSendingStatus("Menyiapkan dokumen...");
+    setSendingStatus("Menyiapkan dokumen HD...");
 
     const dataToPrint = { ...item.data, savedTemplateType: item.type };
     setPrintData(dataToPrint);
@@ -93,33 +95,34 @@ export default function ArsipPage() {
         const element = printComponentRef.current;
         if (!element) throw new Error("Template tidak ditemukan");
 
-        setSendingStatus("Mengonversi ke PDF (HD)...");
+        setSendingStatus("Mengonversi ke Gambar (HD)...");
 
-        // FIX: Import library dengan casting 'any' agar tidak error TypeScript
-        const html2pdfModule = await import("html2pdf.js");
-        const html2pdf = (html2pdfModule.default || html2pdfModule) as any;
+        // 1. Convert HTML ke Gambar PNG (High Quality)
+        // Kita pakai scale 2 atau 3 agar teks tajam saat di-zoom di PDF
+        const dataUrl = await toPng(element, {
+          cacheBust: true,
+          pixelRatio: 2.5, // 2.5x resolusi agar tajam tapi file tidak terlalu raksasa
+          backgroundColor: "#ffffff",
+        });
 
-        // FIX: Konfigurasi OPT dibuat explisit sebagai object 'any'
-        const opt: any = {
-          margin: [0, 0, 0, 0], // Margin 0 agar layout dikontrol CSS
-          filename: `Surat_${item.nomor.replace(/[^a-zA-Z0-9]/g, "-")}.pdf`,
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            scrollY: 0,
-            windowWidth: 1200,
-            letterRendering: true,
-            // Abaikan CSS global biar tidak error lab/oklch
-            ignoreElements: (node: any) => node.tagName === 'STYLE' || node.tagName === 'LINK',
-          },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-          pagebreak: { mode: ["avoid-all", "css", "legacy"] },
-        };
+        // 2. Hitung dimensi halaman berdasarkan Aspect Ratio gambar
+        const pdfWidth = 210; // A4 Width dalam mm
+        const tempPdf = new jsPDF();
+        const imgProps = tempPdf.getImageProperties(dataUrl);
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-        // FIX: Panggil library dengan rantai method yang aman
-        const worker = html2pdf().set(opt).from(element);
-        const pdfBlob = await worker.output("blob");
+        // 3. Buat PDF dengan tinggi dinamis (Custom Page Size)
+        // Kita pakai format array [width, height] agar halaman menyesuaikan konten panjang
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "mm",
+          format: [pdfWidth, pdfHeight],
+        });
+
+        pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+        // 4. Output sebagai Blob
+        const pdfBlob = pdf.output("blob");
 
         if (pdfBlob.size > 49 * 1024 * 1024) {
           throw new Error("Ukuran file > 50MB. Telegram menolak.");
@@ -128,7 +131,9 @@ export default function ArsipPage() {
         setSendingStatus("Mengirim ke Telegram...");
 
         const formData = new FormData();
-        const safeFilename = opt.filename;
+        // Bersihkan nama file dari karakter aneh
+        const safeFilename = `Surat_${item.nomor.replace(/[^a-zA-Z0-9]/g, "-")}.pdf`;
+
         formData.append("chat_id", chatId);
         formData.append("document", pdfBlob, safeFilename);
 
@@ -149,7 +154,7 @@ ${headerTitle}
 📌 *Nomor:* ${item.nomor}
 📝 *Perihal:* ${messagePerihal}
 
-_Dokumen PDF terlampir._
+_Dokumen PDF terlampir (High Quality)._
 `.trim();
 
         formData.append("caption", caption);
@@ -166,7 +171,7 @@ _Dokumen PDF terlampir._
         const result = await response.json();
 
         if (result.ok) {
-          alert("✅ Sukses! File PDF telah dikirim.");
+          alert("✅ Sukses! File PDF (HD) telah dikirim ke Telegram.");
         } else {
           alert("❌ Gagal kirim: " + result.description);
           if (result.error_code === 401 || result.error_code === 400)
@@ -181,7 +186,7 @@ _Dokumen PDF terlampir._
         setPrintData(null);
         setSelectedItemForTel(null);
       }
-    }, 1500);
+    }, 1500); // Delay agar render React selesai sempurna sebelum capture
   };
 
   // --- PRINT MANUAL (FIXED) ---
@@ -359,8 +364,8 @@ _Dokumen PDF terlampir._
                   <div className="flex items-center gap-2 mb-2">
                     <span
                       className={`text-[10px] font-bold px-2 py-1 rounded border ${item.type === "UNDANGAN"
-                          ? "bg-red-50 text-red-600 border-red-100"
-                          : "bg-green-50 text-green-600 border-green-100"
+                        ? "bg-red-50 text-red-600 border-red-100"
+                        : "bg-green-50 text-green-600 border-green-100"
                         }`}
                     >
                       {item.type}
