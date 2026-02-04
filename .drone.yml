@@ -38,6 +38,10 @@ steps:
 
       - cp -rT . /root/smk3-monitoring
       - cd /root/smk3-monitoring
+      
+      # ⚠️ FIX PERMISSION: Buat folder upload dan buka aksesnya ⚠️
+      - mkdir -p public/uploads
+      - chmod -R 777 public/uploads
 
       # 4. Buat file .env (Pengganti Infisical)
       # Menggunakan 'host.docker.internal' agar jalan di Docker
