@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readFile, stat } from "fs/promises";
 import { join } from "path";
-import { lookup } from "mime-types"; // Perlu install kalau belum ada, tapi kita pakai manual mapping dulu biar hemat
+// import { lookup } from "mime-types";
 
 export const dynamic = 'force-dynamic';
 
