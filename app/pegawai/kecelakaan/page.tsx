@@ -11,13 +11,14 @@ export default function LaporKecelakaanPage() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
-    const formData = new FormData(event.currentTarget)
+    const form = event.currentTarget // ✅ Amankan referensi form
+    const formData = new FormData(form)
     try {
       const result = await createLaporanKecelakaan(formData)
 
       if (result.success) {
         setSuccess(true)
-        event.currentTarget.reset()
+        form.reset() // ✅ Gunakan variabel 'form' yang aman
         setTimeout(() => setSuccess(false), 5000)
       } else {
         alert(`Gagal mengirim laporan: ${result.message}`)
