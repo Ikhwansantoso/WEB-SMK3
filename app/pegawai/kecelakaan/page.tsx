@@ -25,7 +25,9 @@ export default function LaporKecelakaanPage() {
 
     } catch (error) {
       console.error(error)
-      alert("Terjadi kesalahan sistem.")
+      // Tampilkan pesan error asli untuk debugging
+      const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan sistem (Unknown Error)"
+      alert(`DEBUG ERROR: ${errorMessage}`)
     } finally {
       setLoading(false)
     }
