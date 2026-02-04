@@ -53,3 +53,16 @@ export async function createLaporanKecelakaan(formData: FormData) {
     }
   }
 }
+
+export async function deleteLaporanKecelakaan(id: string) {
+  try {
+    await prisma.laporanKecelakaan.delete({
+      where: { id }
+    })
+    revalidatePath('/admin/kecelakaan')
+    return { success: true, message: "Laporan berhasil dihapus" }
+  } catch (error) {
+    console.error("Gagal hapus insiden:", error)
+    return { success: false, message: "Gagal menghapus laporan" }
+  }
+}

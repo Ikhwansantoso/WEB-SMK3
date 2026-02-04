@@ -29,9 +29,7 @@ export default function RootLayout({
          karena variabelnya sudah tidak ada. 
          Sisakan 'antialiased' saja atau string kosong.
       */}
-      <body className="antialiased"> 
-        {children}
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }
