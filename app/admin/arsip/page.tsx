@@ -271,7 +271,7 @@ _Dokumen PDF terlampir (High Quality)._
             <div className="space-y-3">
               <input
                 type="text"
-                placeholder="Contoh: 123456:ABC-Def..."
+                placeholder="Token Bot Telegram Contoh: 123456:ABC-Def..."
                 value={telegramConfig.botToken}
                 onChange={(e) =>
                   setTelegramConfig({
@@ -283,7 +283,7 @@ _Dokumen PDF terlampir (High Quality)._
               />
               <input
                 type="text"
-                placeholder="Contoh: -100123456789"
+                placeholder="ID Grup Telegram Contoh: -100123456789"
                 value={telegramConfig.chatId}
                 onChange={(e) =>
                   setTelegramConfig({
