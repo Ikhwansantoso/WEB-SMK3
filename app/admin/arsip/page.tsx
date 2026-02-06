@@ -1,5 +1,6 @@
 "use client";
 
+import { getSuratList, deleteSurat } from "@/app/actions/surat";
 import { useState, useEffect, useRef } from "react";
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
@@ -23,7 +24,7 @@ export default function ArsipPage() {
   const [listArsip, setListArsip] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // STATE TELEGRAM
+  // STATE TELEGRAM ...
   const [showTelModal, setShowTelModal] = useState(false);
   const [telegramConfig, setTelegramConfig] = useState({
     botToken: "",
@@ -33,23 +34,41 @@ export default function ArsipPage() {
   const [isSending, setIsSending] = useState(false);
   const [sendingStatus, setSendingStatus] = useState("");
 
-  // STATE PRINTING
+  // STATE PRINTING ...
   const [printData, setPrintData] = useState<any>(null);
   const printComponentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const savedData = localStorage.getItem("smk3_arsip_surat");
-    const savedConfig = localStorage.getItem("smk3_telegram_config");
+    async function fetchArsip() {
+      const res = await getSuratList();
+      if (res.success && res.data) {
+        // Map data from DB to UI format if needed
+        // DB: { id, nomor, perihal, type, data, createdAt }
+        // UI expects same structure essentially
+        // createdAt format might be Date object, UI expects string maybe?
+        const mapped = res.data.map((item: any) => ({
+          ...item,
+          createdAt: new Date(item.createdAt).toLocaleString("id-ID"),
+          // data is already JSON object
+        }));
+        setListArsip(mapped);
+      }
+    }
+    fetchArsip();
 
-    if (savedData) setListArsip(JSON.parse(savedData));
+    const savedConfig = localStorage.getItem("smk3_telegram_config");
     if (savedConfig) setTelegramConfig(JSON.parse(savedConfig));
   }, []);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Yakin ingin menghapus dokumen ini selamanya?")) {
-      const updated = listArsip.filter((item) => item.id !== id);
-      setListArsip(updated);
-      localStorage.setItem("smk3_arsip_surat", JSON.stringify(updated));
+      const res = await deleteSurat(id);
+      if (res.success) {
+        const updated = listArsip.filter((item) => item.id !== id);
+        setListArsip(updated);
+      } else {
+        alert("Gagal menghapus: " + res.error);
+      }
     }
   };
 

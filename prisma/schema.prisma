@@ -120,3 +120,16 @@ model Laporan {
 
   @@unique([witelId, bulanIndex, tahun])
 }
+
+// ==========================================
+// 6. ARSIP SURAT
+// ==========================================
+model ArsipSurat {
+  id        String   @id @default(cuid())
+  nomor     String
+  perihal   String
+  type      String   // "UNDANGAN" | "LAPORAN"
+  data      Json     // Stores flexible content (kepada, dari, body, etc.)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

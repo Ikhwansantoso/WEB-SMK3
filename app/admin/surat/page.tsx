@@ -2,6 +2,7 @@
 
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
+import { saveSurat, getSuratById } from "@/app/actions/surat";
 import { useState, useRef, useEffect, Suspense } from "react";
 import { useReactToPrint } from "react-to-print";
 import {
@@ -136,16 +137,23 @@ function SuratEditor() {
     "1. Sdr. EVP Telkom Regional III\n2. Sdr. Sekretaris P2K3\n3. Arsip",
   );
 
-  // --- LOAD ARSIP (READ ONLY) ---
+
+
+  // ... imports
+
+  // ... inside SuratEditor
+  // Remove "1. Load Arsip" useEffect using localStorage
+
+  // New useEffect for loading from DB
   useEffect(() => {
-    if (arsipId) {
-      const savedArsip = localStorage.getItem("smk3_arsip_surat");
-      if (savedArsip) {
-        const list = JSON.parse(savedArsip);
-        const found = list.find((item: any) => item.id === arsipId);
-        if (found) {
-          const d = found.data;
-          setTemplate(found.type);
+    async function loadSurat() {
+      if (arsipId) {
+        const res = await getSuratById(arsipId);
+        if (res.success && res.data) {
+          const d = res.data.data as any; // Cast from JSON
+          setTemplate(res.data.type as any);
+          // ... set all states ...
+          // Mapping data fields manually or just spread if structure matches
           setNomorSurat(d.nomorSurat);
           setLampiran(d.lampiran);
           setKota(d.kota);
@@ -178,13 +186,16 @@ function SuratEditor() {
           setSaran(d.saran);
           setJabatanLaporan(d.jabatanLaporan);
           setTembusanLaporan(d.tembusanLaporan);
+        } else {
+          alert("Gagal memuat surat: " + res.error);
         }
       }
     }
+    loadSurat();
   }, [arsipId]);
 
   // --- SIMPAN KE ARSIP ---
-  const handleSaveArsip = () => {
+  const handleSaveArsip = async () => {
     const currentState = {
       nomorSurat,
       lampiran,
@@ -220,22 +231,26 @@ function SuratEditor() {
       tembusanLaporan,
     };
 
-    const newArsip = {
-      id: Date.now().toString(),
-      createdAt: new Date().toLocaleString("id-ID"),
-      type: template,
+    // Prepare data flat for DB or structured
+    // We send payload that matches what saveSurat expects
+    const payload = {
       nomor: nomorSurat,
-      perihal: perihal,
-      data: currentState,
+      type: template,
+      ...currentState // This goes into 'data' JSON field by convention in saveSurat if we adjusted it, 
+      // BUT wait, saveSurat expects { nomor, perihal, type, ...rest }.
+      // My saveSurat wraps 'rest' into 'data' JSON field. 
+      // So passing ...currentState is correct.
     };
 
-    const existingData = localStorage.getItem("smk3_arsip_surat");
-    const listArsip = existingData ? JSON.parse(existingData) : [];
-    const updatedList = [newArsip, ...listArsip];
+    // Add loading indicator manually if needed or just alert
+    const res = await saveSurat(payload);
 
-    localStorage.setItem("smk3_arsip_surat", JSON.stringify(updatedList));
-    alert("✅ Surat BERHASIL disimpan ke Arsip!");
-    router.push("/admin/arsip"); // Redirect ke Arsip
+    if (res.success) {
+      alert("✅ Surat BERHASIL disimpan ke Database!");
+      router.push("/admin/arsip");
+    } else {
+      alert("❌ Gagal menyimpan: " + res.error);
+    }
   };
 
   const handleDownloadPDF = async () => {
