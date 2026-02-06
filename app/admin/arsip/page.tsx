@@ -547,7 +547,7 @@ function SuratTemplate({ data }: { data: any }) {
               <tr>
                 <td style={styles.headerCellLabel}>Kepada</td>
                 <td style={styles.headerCellColon}>:</td>
-                <td style={styles.headerCellValue}>{data.kepada}</td>
+                <td style={{ ...styles.headerCellValue, whiteSpace: "pre-wrap" }}>{data.kepada}</td>
               </tr>
               <tr>
                 <td style={styles.headerCellLabel}>Dari</td>

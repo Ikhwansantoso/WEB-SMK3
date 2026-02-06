@@ -320,12 +320,19 @@ function SuratEditor() {
 
             {template === "UNDANGAN" ? (
               <>
-                <InputGroup
-                  disabled={isViewMode}
-                  label="Kepada"
-                  val={kepada}
-                  set={setKepada}
-                />
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+                    Kepada
+                  </label>
+                  <textarea
+                    disabled={isViewMode}
+                    rows={4}
+                    value={kepada}
+                    onChange={(e) => setKepada(e.target.value)}
+                    className="w-full py-2 bg-transparent border-b border-slate-300 text-sm font-medium text-black outline-none focus:border-red-600 transition resize-none placeholder:text-slate-300 disabled:bg-slate-50 disabled:text-slate-500"
+                    placeholder="Masukkan nama penerima (satu per baris)..."
+                  />
+                </div>
                 <InputGroup
                   disabled={isViewMode}
                   label="Dari"
@@ -677,7 +684,7 @@ function SuratEditor() {
           {isViewMode ? (
             // MODE ARSIP: Hanya boleh CETAK
             <>
-             handleDownloadPDF
+              handleDownloadPDF
               <Link
                 href="/admin/arsip"
                 className="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 py-3 rounded-xl font-bold flex justify-center items-center gap-2 transition"
@@ -766,7 +773,8 @@ function SuratEditor() {
 
                   <div className="grid grid-cols-[90px_10px_1fr] gap-y-1 mb-6">
                     <div>Nomor</div> <div>:</div> <div>{nomorSurat}</div>
-                    <div>Kepada</div> <div>:</div> <div>{kepada}</div>
+                    <div className="align-top">Kepada</div> <div className="align-top">:</div>
+                    <div className="whitespace-pre-wrap align-top">{kepada}</div>
                     <div>Dari</div> <div>:</div> <div>{dari}</div>
                     <div>Lampiran</div> <div>:</div> <div>{lampiran}</div>
                     <div className="align-top">Perihal</div>
