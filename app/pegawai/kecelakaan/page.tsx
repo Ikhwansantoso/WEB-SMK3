@@ -64,19 +64,30 @@ export default function LaporKecelakaanPage() {
       <form onSubmit={handleSubmit} className="space-y-5">
 
         {/* Waktu & Lokasi */}
+        {/* Waktu & Lokasi */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-xs font-bold text-slate-700 mb-1 block">Waktu Kejadian</label>
             <div className="relative">
-              <Calendar className="absolute left-3 top-3 text-slate-400" size={18} />
-              <input type="datetime-local" name="waktuKejadian" required className="w-full border border-slate-300 pl-10 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500" />
+              <Calendar className="absolute left-3 top-3 text-slate-500" size={18} />
+              <input
+                type="datetime-local"
+                name="waktuKejadian"
+                required
+                className="w-full bg-white border border-slate-600 pl-10 p-3 rounded-xl text-sm text-slate-900 outline-none focus:ring-2 focus:ring-red-500 shadow-sm placeholder:text-slate-500"
+              />
             </div>
           </div>
           <div>
             <label className="text-xs font-bold text-slate-700 mb-1 block">Lokasi Kejadian</label>
             <div className="relative">
-              <MapPin className="absolute left-3 top-3 text-slate-400" size={18} />
-              <input name="lokasi" required placeholder="Area Gudang / Lapangan" className="w-full border border-slate-300 pl-10 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500" />
+              <MapPin className="absolute left-3 top-3 text-slate-500" size={18} />
+              <input
+                name="lokasi"
+                required
+                placeholder="Area Gudang / Lapangan"
+                className="w-full bg-white border border-slate-600 pl-10 p-3 rounded-xl text-sm text-slate-900 outline-none focus:ring-2 focus:ring-red-500 shadow-sm placeholder:text-slate-500"
+              />
             </div>
           </div>
         </div>
@@ -84,14 +95,23 @@ export default function LaporKecelakaanPage() {
         {/* Judul & Korban */}
         <div>
           <label className="text-xs font-bold text-slate-700 mb-1 block">Judul Insiden</label>
-          <input name="judul" required placeholder="Contoh: Jatuh dari Tangga saat Maintenance" className="w-full border border-slate-300 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500" />
+          <input
+            name="judul"
+            required
+            placeholder="Contoh: Jatuh dari Tangga saat Maintenance"
+            className="w-full bg-white border border-slate-600 p-3 rounded-xl text-sm text-slate-900 outline-none focus:ring-2 focus:ring-red-500 shadow-sm placeholder:text-slate-500"
+          />
         </div>
 
         <div>
           <label className="text-xs font-bold text-slate-700 mb-1 block">Nama Korban (Jika ada)</label>
           <div className="relative">
-            <User className="absolute left-3 top-3 text-slate-400" size={18} />
-            <input name="korban" placeholder="Nama pegawai / mitra" className="w-full border border-slate-300 pl-10 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500" />
+            <User className="absolute left-3 top-3 text-slate-500" size={18} />
+            <input
+              name="korban"
+              placeholder="Nama pegawai / mitra"
+              className="w-full bg-white border border-slate-600 pl-10 p-3 rounded-xl text-sm text-slate-900 outline-none focus:ring-2 focus:ring-red-500 shadow-sm placeholder:text-slate-500"
+            />
           </div>
         </div>
 
@@ -99,15 +119,26 @@ export default function LaporKecelakaanPage() {
         <div>
           <label className="text-xs font-bold text-slate-700 mb-1 block">Kronologi Singkat</label>
           <div className="relative">
-            <FileText className="absolute left-3 top-3 text-slate-400" size={18} />
-            <textarea name="kronologi" required rows={4} placeholder="Ceritakan bagaimana kejadian bermula..." className="w-full border border-slate-300 pl-10 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500"></textarea>
+            <FileText className="absolute left-3 top-3 text-slate-500" size={18} />
+            <textarea
+              name="kronologi"
+              required
+              rows={4}
+              placeholder="Ceritakan bagaimana kejadian bermula..."
+              className="w-full bg-white border border-slate-600 pl-10 p-3 rounded-xl text-sm text-slate-900 outline-none focus:ring-2 focus:ring-red-500 shadow-sm placeholder:text-slate-500"
+            ></textarea>
           </div>
         </div>
 
         {/* Foto */}
         <div>
           <label className="text-xs font-bold text-slate-700 mb-1 block">Foto Bukti / Kondisi (Opsional)</label>
-          <input type="file" name="foto" accept="image/*" className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100" />
+          <input
+            type="file"
+            name="foto"
+            accept="image/*"
+            className="block w-full text-sm text-slate-900 border border-slate-500 rounded-xl cursor-pointer bg-white file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-white hover:file:bg-slate-900"
+          />
         </div>
 
         <button disabled={loading} type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition-all active:scale-95 shadow-lg shadow-red-200">
