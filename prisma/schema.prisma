@@ -133,3 +133,19 @@ model ArsipSurat {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ==========================================
+// 7. IBPR (Identifikasi Bahaya & Pengendalian Risiko)
+// ==========================================
+model Ibpr {
+  id          String   @id @default(cuid())
+  lokasi      String
+  aktivitas   String
+  bahaya      String
+  peluang     String
+  penanganan  String
+  fotoRuangan String?  // URL Foto Ruangan
+  dokumenIbpr String?  // URL Dokumen PDF
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

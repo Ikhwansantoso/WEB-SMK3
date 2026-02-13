@@ -52,17 +52,16 @@ export default function AdminSidebar() {
           <span>Dashboard</span>
         </Link>
 
-        {/* --- MENU BARU: DOKUMEN IPBR (MENGGANTIKAN RISIKO) ---
         <Link
-          href="/admin/ipbr"
+          href="/admin/ibpr"
           className="flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all group font-medium"
         >
           <FolderOpen
             size={20}
             className="group-hover:text-red-600 text-slate-400 transition-colors"
           />
-          <span>Dokumen IPBR</span>
-        </Link> */}
+          <span>Dokumen IBPR</span>
+        </Link>
 
         <Link
           href="/admin/monitoring"
