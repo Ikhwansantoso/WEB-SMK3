@@ -18,6 +18,7 @@ import {
   uploadLaporan,
   deleteLaporan,
 } from "@/app/actions/laporan";
+import toast from "react-hot-toast";
 
 const BULAN = [
   "JAN",
@@ -73,22 +74,31 @@ export default function MonitoringPage() {
     formData.append("tahun", year.toString());
     const res = await uploadLaporan(formData);
     if (res.success) {
+      toast.success("Laporan berhasil diunggah");
       setModalOpen(false);
       fetchData();
     } else {
-      alert("❌ Gagal: " + res.message);
+      toast.error("Gagal mengunggah laporan: " + res.message);
     }
     setUploading(false);
   };
 
   const handleDelete = async (laporanId: number, fileUrl: string) => {
-    if (!confirm("Hapus laporan ini permanen?")) return;
-    const res = await deleteLaporan(laporanId, fileUrl);
+    if (!window.confirm("Hapus laporan ini permanen?")) return;
+
+    // We can use a toast promise here for better UX
+    const deletePromise = deleteLaporan(laporanId, fileUrl);
+
+    toast.promise(deletePromise, {
+      loading: 'Menghapus laporan...',
+      success: 'Laporan berhasil dihapus',
+      error: 'Gagal menghapus laporan'
+    });
+
+    const res = await deletePromise;
     if (res.success) {
       setModalOpen(false);
       fetchData();
-    } else {
-      alert("Gagal menghapus");
     }
   };
 
@@ -173,10 +183,10 @@ export default function MonitoringPage() {
           />
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-xl shadow-sm flex-1 overflow-hidden flex flex-col">
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm flex-1 overflow-hidden flex flex-col mb-4">
           {/* Header Tabel */}
-          <div className="grid grid-cols-[280px_1fr] bg-slate-100 border-b border-slate-200 text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-            <div className="p-4 border-r border-slate-200 flex items-center">
+          <div className="grid grid-cols-[280px_1fr] bg-slate-50 border-b-2 border-slate-200 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider relative z-10 shadow-sm">
+            <div className="p-4 border-r border-slate-200 flex items-center bg-slate-50">
               UNIT / WITEL
             </div>
             <div className="grid grid-cols-12">
@@ -225,11 +235,10 @@ export default function MonitoringPage() {
                                 laporan,
                               )
                             }
-                            className={`w-full h-14 rounded-lg flex items-center justify-center transition-all duration-200 border-2 ${
-                              laporan
-                                ? "bg-emerald-50 border-emerald-100 text-emerald-600 hover:bg-emerald-100 hover:scale-105 shadow-sm"
-                                : "bg-white border-dashed border-slate-200 text-slate-300 hover:border-red-300 hover:text-red-500 hover:bg-red-50"
-                            }`}
+                            className={`w-full h-14 rounded-lg flex items-center justify-center transition-all duration-200 border-2 ${laporan
+                              ? "bg-emerald-50 border-emerald-100 text-emerald-600 hover:bg-emerald-100 hover:scale-105 shadow-sm"
+                              : "bg-white border-dashed border-slate-200 text-slate-300 hover:border-red-300 hover:text-red-500 hover:bg-red-50"
+                              }`}
                             title={laporan ? "Sudah Lapor" : "Belum Lapor"}
                           >
                             {laporan ? (
@@ -259,19 +268,20 @@ export default function MonitoringPage() {
 
       {/* MODAL UPLOAD / VIEW */}
       {modalOpen && selectedCell && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-lg shadow-2xl w-full max-w-sm overflow-hidden">
-            <div className="p-5 border-b flex justify-between items-center bg-slate-50">
-              <div>
-                <h3 className="font-bold text-slate-800 text-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4 animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/5 rounded-full -mr-16 -mt-16 pointer-events-none"></div>
+              <div className="relative z-10">
+                <h3 className="font-extrabold text-slate-800 text-base">
                   {selectedCell.witelName}
                 </h3>
-                <p className="text-[10px] text-red-600 font-bold uppercase mt-0.5">
+                <p className="text-[10px] text-red-600 font-bold uppercase mt-1 tracking-wider">
                   Laporan Bulan: {BULAN[selectedCell.monthIndex]} {year}
                 </p>
               </div>
-              <button onClick={() => setModalOpen(false)}>
-                <X size={20} className="text-slate-400 hover:text-red-500" />
+              <button onClick={() => setModalOpen(false)} className="relative z-10 p-2 hover:bg-red-100 rounded-full transition-colors group">
+                <X size={20} className="text-slate-400 group-hover:text-red-600 transition-colors" />
               </button>
             </div>
 
@@ -333,7 +343,7 @@ export default function MonitoringPage() {
                           selectedCell.laporan.fileUrl,
                         )
                       }
-                      className="flex items-center justify-center px-4 bg-white border border-slate-200 text-red-500 rounded-md hover:bg-red-50 hover:border-red-200 transition"
+                      className="flex items-center justify-center px-4 bg-red-50 border border-red-100 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all shadow-sm"
                     >
                       <Trash2 size={18} />
                     </button>

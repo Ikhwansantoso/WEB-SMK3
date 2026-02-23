@@ -70,10 +70,14 @@ export default async function KecelakaanPage() {
         ))}
 
         {incidents.length === 0 && (
-          <div className="text-center py-20 bg-slate-50 rounded-xl border border-dashed border-slate-300">
-            <FileWarning className="mx-auto text-slate-300 mb-4" size={48} />
-            <h3 className="text-slate-500 font-bold">Belum ada insiden tercatat</h3>
-            <p className="text-slate-400 text-sm">Semoga selamanya tetap nol (Zero Accident)!</p>
+          <div className="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 min-h-[400px]">
+            <div className="bg-white p-6 rounded-full mb-4 shadow-sm border border-slate-100">
+              <FileWarning className="text-slate-300" size={48} />
+            </div>
+            <h3 className="text-xl font-bold text-slate-700 mb-2">Belum ada insiden tercatat</h3>
+            <p className="text-slate-500 text-sm max-w-sm text-center">
+              Semua berjalan dengan aman. Semoga selamanya tetap nol (<span className="font-bold text-slate-700">Zero Accident</span>)!
+            </p>
           </div>
         )}
       </div>

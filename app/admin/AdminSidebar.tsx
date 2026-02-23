@@ -14,8 +14,11 @@ import {
 } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma"; // IMPORT PRISMA
 
-export default function AdminSidebar() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminSidebar() {
   async function logout() {
     "use server";
     const cookieStore = await cookies();
@@ -23,6 +26,15 @@ export default function AdminSidebar() {
     cookieStore.delete("user_id");
     redirect("/login");
   }
+
+  // AMBIL DATA NOTIFIKASI
+  // 1. Audit yang masih "OPEN"
+  const openAuditsCount = await prisma.temuanAudit.count({
+    where: { status: "OPEN" },
+  });
+
+  // 2. Semua Kecelakaan (Atau bisa disesuaikan jika nanti ada status)
+  const incidentsCount = await prisma.laporanKecelakaan.count();
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 h-screen fixed left-0 top-0 flex flex-col z-50 font-sans shadow-xl">
@@ -82,7 +94,12 @@ export default function AdminSidebar() {
             size={20}
             className="group-hover:text-red-600 text-slate-400 transition-colors"
           />
-          <span>Data Audit</span>
+          <span className="flex-1">Data Audit</span>
+          {openAuditsCount > 0 && (
+            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+              {openAuditsCount}
+            </span>
+          )}
         </Link>
 
         <Link
@@ -93,7 +110,12 @@ export default function AdminSidebar() {
             size={20}
             className="group-hover:text-red-600 text-slate-400 transition-colors"
           />
-          <span>Laporan Insiden</span>
+          <span className="flex-1">Laporan Insiden</span>
+          {incidentsCount > 0 && (
+            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+              {incidentsCount}
+            </span>
+          )}
         </Link>
 
         <div className="my-4 border-t border-slate-100"></div>
