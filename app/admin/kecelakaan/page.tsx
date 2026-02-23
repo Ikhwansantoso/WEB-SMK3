@@ -1,8 +1,9 @@
 // app/admin/kecelakaan/page.tsx
 import { PrismaClient } from '@prisma/client'
-import { Ambulance, Calendar, MapPin, User, FileWarning } from 'lucide-react'
+import { Ambulance, Calendar, MapPin, User, FileWarning, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import DeleteButton from './DeleteButton'
+import MarkDoneButton from './MarkDoneButton'
 
 const prisma = new PrismaClient()
 
@@ -31,7 +32,7 @@ export default async function KecelakaanPage() {
       {/* LIST KEJADIAN */}
       <div className="grid gap-6">
         {incidents.map((item) => (
-          <div key={item.id} className="bg-white border-l-4 border-red-600 rounded-r-xl shadow-sm p-6 flex flex-col md:flex-row gap-6 hover:shadow-md transition">
+          <div key={item.id} className={`bg-white border-l-4 ${item.status === 'CLOSED' ? 'border-emerald-500 opacity-80' : 'border-red-600'} rounded-r-xl shadow-sm p-6 flex flex-col md:flex-row gap-6 hover:shadow-md transition relative group`}>
 
             {/* Tanggal & Lokasi (Kiri) */}
             <div className="md:w-48 flex-shrink-0 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:pr-6 flex flex-col gap-3">
@@ -50,13 +51,33 @@ export default async function KecelakaanPage() {
             </div>
 
             <div className="flex-1 relative">
-              <div className="absolute top-0 right-0">
+              <div className="absolute top-0 right-0 flex items-center gap-1">
+                {item.status === 'CLOSED' ? (
+                  <span className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-xs font-bold border border-emerald-100 flex items-center gap-1">
+                    <CheckCircle size={14} /> Selesai
+                  </span>
+                ) : (
+                  <MarkDoneButton id={item.id} />
+                )}
                 <DeleteButton id={item.id} />
               </div>
-              <h3 className="font-bold text-lg text-slate-800 mb-2 pr-10">Kronologi Kejadian</h3>
-              <p className="text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100 text-sm">
+              <h3 className="font-bold text-lg text-slate-800 mb-2 pr-24">Kronologi Kejadian</h3>
+              <p className="text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100 text-sm mb-4">
                 {item.kronologi}
               </p>
+
+              {/* GAMBAR BUKTI INSIDEN */}
+              {item.fotoBukti && (
+                <div className="mb-4">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">Foto Bukti / Lokasi Kejadian</span>
+                  <a href={item.fotoBukti} target="_blank" rel="noreferrer" className="block max-w-[200px] rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow group/img relative bg-slate-100 flex items-center justify-center">
+                    <img src={item.fotoBukti} alt="Bukti Insiden" className="w-full h-auto object-contain max-h-32 group-hover/img:scale-105 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="text-white text-xs font-bold bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-sm">Lihat Penuh</span>
+                    </div>
+                  </a>
+                </div>
+              )}
 
               <div className="mt-4 flex items-center gap-2 text-xs text-slate-400">
                 <User size={14} />

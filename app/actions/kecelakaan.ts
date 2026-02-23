@@ -66,3 +66,17 @@ export async function deleteLaporanKecelakaan(id: string) {
     return { success: false, message: "Gagal menghapus laporan" }
   }
 }
+
+export async function markIncidentAsDone(id: string) {
+  try {
+    await prisma.laporanKecelakaan.update({
+      where: { id },
+      data: { status: "CLOSED" }
+    })
+    revalidatePath('/admin/kecelakaan')
+    return { success: true, message: "Insiden telah ditandai selesai" }
+  } catch (error) {
+    console.error("Gagal update status insiden:", error)
+    return { success: false, message: "Gagal menandai insiden" }
+  }
+}
