@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { createLaporanKecelakaan } from "@/app/actions/kecelakaan"
 import { Ambulance, Calendar, MapPin, User, FileText, Loader2, CheckCircle } from "lucide-react"
+import toast from "react-hot-toast"
 
 export default function LaporKecelakaanPage() {
   const [loading, setLoading] = useState(false)
@@ -13,22 +14,32 @@ export default function LaporKecelakaanPage() {
     setLoading(true)
     const form = event.currentTarget // ✅ Amankan referensi form
     const formData = new FormData(form)
+
+    // Gunakan toast.promise untuk UX yang lebih baik saat submit
+    const submitPromise = createLaporanKecelakaan(formData)
+
+    toast.promise(submitPromise, {
+      loading: "Mengirim laporan...",
+      success: "Laporan berhasil dikirim!",
+      error: "Gagal mengirim laporan",
+    })
+
     try {
-      const result = await createLaporanKecelakaan(formData)
+      const result = await submitPromise
 
       if (result.success) {
         setSuccess(true)
         form.reset() // ✅ Gunakan variabel 'form' yang aman
         setTimeout(() => setSuccess(false), 5000)
       } else {
-        alert(`Gagal mengirim laporan: ${result.message}`)
+        toast.error(`Gagal mengirim laporan: ${result.message}`)
       }
 
     } catch (error) {
       console.error(error)
       // Tampilkan pesan error asli untuk debugging
       const errorMessage = error instanceof Error ? error.message : "Terjadi kesalahan sistem (Unknown Error)"
-      alert(`DEBUG ERROR: ${errorMessage}`)
+      toast.error(`DEBUG ERROR: ${errorMessage}`)
     } finally {
       setLoading(false)
     }

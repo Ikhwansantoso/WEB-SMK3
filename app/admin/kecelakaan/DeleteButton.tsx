@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Trash2, Loader2 } from 'lucide-react'
 import { deleteLaporanKecelakaan } from '@/app/actions/kecelakaan'
+import toast from 'react-hot-toast'
 
 export default function DeleteButton({ id }: { id: string }) {
     const [loading, setLoading] = useState(false)
@@ -12,11 +13,20 @@ export default function DeleteButton({ id }: { id: string }) {
         if (!confirm) return
 
         setLoading(true)
+
+        const deletePromise = deleteLaporanKecelakaan(id)
+
+        toast.promise(deletePromise, {
+            loading: "Menghapus laporan...",
+            success: "Laporan berhasil dihapus",
+            error: "Gagal menghapus data",
+        })
+
         try {
-            await deleteLaporanKecelakaan(id)
+            await deletePromise
             // Router refresh otomatis via revalidatePath di server action
         } catch (error) {
-            alert("Gagal menghapus data")
+            console.error(error)
         } finally {
             setLoading(false)
         }

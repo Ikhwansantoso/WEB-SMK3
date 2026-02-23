@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Sistem Manajemen K3 Telkom Indonesia",
 };
 
+import { Toaster } from "react-hot-toast";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,12 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      {/* PERBAIKAN DI SINI:
-         Hapus '${geistSans.variable} ${geistMono.variable}' 
-         karena variabelnya sudah tidak ada. 
-         Sisakan 'antialiased' saja atau string kosong.
-      */}
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <Toaster position="bottom-right" />
+        {children}
+      </body>
     </html>
   );
 }

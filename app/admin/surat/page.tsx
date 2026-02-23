@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 // TIPE TEMPLATE
 type TemplateType = "UNDANGAN" | "LAPORAN";
@@ -187,7 +188,7 @@ function SuratEditor() {
           setJabatanLaporan(d.jabatanLaporan);
           setTembusanLaporan(d.tembusanLaporan);
         } else {
-          alert("Gagal memuat surat: " + res.error);
+          toast.error("Gagal memuat surat: " + res.error);
         }
       }
     }
@@ -246,10 +247,10 @@ function SuratEditor() {
     const res = await saveSurat(payload);
 
     if (res.success) {
-      alert("✅ Surat BERHASIL disimpan ke Database!");
+      toast.success("Surat BERHASIL disimpan ke Database!");
       router.push("/admin/arsip");
     } else {
-      alert("❌ Gagal menyimpan: " + res.error);
+      toast.error("Gagal menyimpan: " + res.error);
     }
   };
 
@@ -279,7 +280,7 @@ function SuratEditor() {
       pdf.save(`Surat_${nomorSurat.replace(/[\/\\:.]/g, "-")}.pdf`);
     } catch (err) {
       console.error("Gagal convert:", err);
-      alert("Gagal memproses PDF. Coba refresh halaman.");
+      toast.error("Gagal memproses PDF. Coba refresh halaman.");
     }
   };
 
