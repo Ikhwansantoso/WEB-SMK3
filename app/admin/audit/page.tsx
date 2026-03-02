@@ -6,9 +6,11 @@ import {
     MapPin,
     User,
     ExternalLink,
-    Inbox
+    Inbox,
+    SearchX
 } from "lucide-react";
-import TombolAksi from "./TombolAksi"; // <--- Import Tombol Baru
+import TombolAksi from "./TombolAksi";
+import AuditFilter from "./AuditFilter"; // <--- Import Filter Baru
 
 function formatDate(date: Date) {
     return new Intl.DateTimeFormat("id-ID", {
@@ -16,10 +18,50 @@ function formatDate(date: Date) {
     }).format(date);
 }
 
-export default async function AdminAuditPage() {
+interface SearchParams {
+    q?: string;
+    status?: string;
+    kondisi?: string;
+}
+
+export default async function AdminAuditPage({
+    searchParams,
+}: {
+    searchParams: Promise<SearchParams>;
+}) {
+    const unresolvedParams = await searchParams;
+    const q = typeof unresolvedParams.q === 'string' ? unresolvedParams.q : '';
+    const statusFilter = typeof unresolvedParams.status === 'string' ? unresolvedParams.status : 'ALL';
+    const kondisiFilter = typeof unresolvedParams.kondisi === 'string' ? unresolvedParams.kondisi : 'ALL';
+
+    // Menyusun kondisi pencarian berdasar param URL
+    let whereCondition: any = {};
+
+    if (statusFilter !== 'ALL') {
+        whereCondition.status = statusFilter;
+    }
+
+    if (kondisiFilter !== 'ALL') {
+        whereCondition.kondisi = kondisiFilter;
+    }
+
+    if (q) {
+        whereCondition.OR = [
+            { judul: { contains: q, mode: 'insensitive' } },
+            { deskripsi: { contains: q, mode: 'insensitive' } },
+            { lokasi: { contains: q, mode: 'insensitive' } },
+            {
+                auditor: {
+                    name: { contains: q, mode: 'insensitive' }
+                }
+            }
+        ];
+    }
+
     const audits = await prisma.temuanAudit.findMany({
+        where: whereCondition,
         orderBy: { createdAt: "desc" },
-        include: { auditor: true }, // Pastikan ini ada
+        include: { auditor: true },
     });
 
     return (
@@ -34,15 +76,28 @@ export default async function AdminAuditPage() {
                 </div>
             </div>
 
+            {/* FILTER & PENCARIAN AUDIO */}
+            <AuditFilter />
+
             <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden min-h-[400px]">
                 {audits.length === 0 ? (
                     <div className="flex flex-col items-center justify-center p-16 text-center h-full min-h-[400px] animate-in fade-in duration-500">
                         <div className="bg-slate-50 p-6 rounded-full mb-4 ring-8 ring-slate-50/50">
-                            <Inbox size={48} className="text-slate-300" />
+                            {q || statusFilter !== 'ALL' || kondisiFilter !== 'ALL' ? (
+                                <SearchX size={48} className="text-slate-300" />
+                            ) : (
+                                <Inbox size={48} className="text-slate-300" />
+                            )}
                         </div>
-                        <h3 className="text-xl font-bold text-slate-800 mb-2">Belum Ada Temuan Audit</h3>
+                        <h3 className="text-xl font-bold text-slate-800 mb-2">
+                            {q || statusFilter !== 'ALL' || kondisiFilter !== 'ALL'
+                                ? "Hasil pencarian tidak ditemukan"
+                                : "Belum Ada Temuan Audit"}
+                        </h3>
                         <p className="text-slate-500 text-sm max-w-sm">
-                            Laporan temuan inspeksi dari lapangan akan muncul di sini. Saat ini semua area terpantau aman.
+                            {q || statusFilter !== 'ALL' || kondisiFilter !== 'ALL'
+                                ? "Coba sesuaikan kata kunci atau ubah pengaturan filter dropdown."
+                                : "Laporan temuan inspeksi dari lapangan akan muncul di sini. Saat ini semua area terpantau aman."}
                         </p>
                     </div>
                 ) : (
@@ -50,7 +105,6 @@ export default async function AdminAuditPage() {
                         <table className="w-full text-left text-sm border-separate border-spacing-y-2">
                             <thead className="text-slate-500 uppercase tracking-wider text-[11px] font-bold">
                                 <tr>
-                                    {/* HAPUS KOMENTAR DI SINI */}
                                     <th className="px-6 py-3 font-extrabold pb-4">Waktu & Pelapor</th>
                                     <th className="px-6 py-3 font-extrabold pb-4">Temuan</th>
                                     <th className="px-6 py-3 font-extrabold pb-4 text-center">Kondisi</th>
@@ -74,7 +128,6 @@ export default async function AdminAuditPage() {
                                                     <MapPin size={14} />
                                                     {item.lokasi}
                                                 </div>
-                                                {/* PERBAIKAN TAMPILAN NAMA PELAPOR */}
                                                 <div className="flex items-center gap-2 text-blue-600 bg-blue-50 px-2 py-1 rounded w-fit text-[10px] font-bold mt-1 border border-blue-100">
                                                     <User size={12} />
                                                     {item.auditor ? item.auditor.name : "Tanpa Nama"}
@@ -110,7 +163,7 @@ export default async function AdminAuditPage() {
 
                                         <td className="px-6 py-4 align-top text-center">
                                             {item.buktiFoto ? (
-                                                <a href={item.buktiFoto} target="_blank" className="text-blue-600 hover:underline text-xs font-bold inline-flex items-center gap-1">
+                                                <a href={item.buktiFoto} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline text-xs font-bold inline-flex items-center gap-1">
                                                     Lihat <ExternalLink size={12} />
                                                 </a>
                                             ) : (
