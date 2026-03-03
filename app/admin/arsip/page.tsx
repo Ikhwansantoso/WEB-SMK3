@@ -753,12 +753,12 @@ function SuratTemplate({ data }: { data: any }) {
                 <td style={{ ...styles.cell, width: "200px", fontWeight: "bold" }}>
                   Nama Perusahaan
                 </td>
-                <td style={styles.cell}>PT. Telkom Indonesia Tbk Regional III</td>
+                <td style={styles.cell}>{data.namaPerusahaan || "PT. Telkom Indonesia Tbk Regional III"}</td>
               </tr>
               <tr>
                 <td style={styles.cell}>2.</td>
                 <td style={{ ...styles.cell, fontWeight: "bold" }}>Alamat</td>
-                <td style={styles.cell}>Jl. Ketintang No. 156, Surabaya</td>
+                <td style={styles.cell}>{data.alamatPerusahaan || "Jl. Ketintang No. 156, Surabaya"}</td>
               </tr>
               <tr>
                 <td style={styles.cell}>3.</td>

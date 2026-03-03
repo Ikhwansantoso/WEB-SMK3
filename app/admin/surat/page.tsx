@@ -131,6 +131,12 @@ function SuratEditor() {
   const [sekretaris, setSekretaris] = useState("AUFAL NAWASANJANI");
   const [hambatan, setHambatan] = useState("-");
   const [saran, setSaran] = useState("-");
+  const [namaPerusahaan, setNamaPerusahaan] = useState(
+    "PT. Telkom Indonesia Tbk Regional III"
+  );
+  const [alamatPerusahaan, setAlamatPerusahaan] = useState(
+    "Jl. Ketintang No. 156, Surabaya"
+  );
   const [jabatanLaporan, setJabatanLaporan] = useState(
     "Ketua III P2K3 Kantor Telkom Regional III",
   );
@@ -185,6 +191,8 @@ function SuratEditor() {
           setSekretaris(d.sekretaris);
           setHambatan(d.hambatan);
           setSaran(d.saran);
+          setNamaPerusahaan(d.namaPerusahaan || "PT. Telkom Indonesia Tbk Regional III");
+          setAlamatPerusahaan(d.alamatPerusahaan || "Jl. Ketintang No. 156, Surabaya");
           setJabatanLaporan(d.jabatanLaporan);
           setTembusanLaporan(d.tembusanLaporan);
         } else {
@@ -228,6 +236,8 @@ function SuratEditor() {
       sekretaris,
       hambatan,
       saran,
+      namaPerusahaan,
+      alamatPerusahaan,
       jabatanLaporan,
       tembusanLaporan,
     };
@@ -484,6 +494,29 @@ function SuratEditor() {
               <p className="text-xs text-slate-400 font-bold uppercase flex items-center gap-2 pb-2 border-b border-slate-100">
                 <FileText size={14} className="text-green-600" /> Data Laporan
               </p>
+              <div className="p-4 bg-green-50/50 border border-green-100 rounded-xl mb-4">
+                <p className="text-[10px] font-bold text-green-600 uppercase mb-3">
+                  Data Perusahaan
+                </p>
+                <InputGroup
+                  disabled={isViewMode}
+                  label="Nama Perusahaan"
+                  val={namaPerusahaan}
+                  set={setNamaPerusahaan}
+                />
+                <div className="mt-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+                    Alamat Perusahaan
+                  </label>
+                  <textarea
+                    disabled={isViewMode}
+                    rows={2}
+                    value={alamatPerusahaan}
+                    onChange={(e) => setAlamatPerusahaan(e.target.value)}
+                    className="w-full py-2 bg-transparent border-b border-slate-300 text-sm font-medium text-black outline-none focus:border-red-600 transition resize-none placeholder:text-slate-300 disabled:bg-slate-50"
+                  />
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <InputGroup
                   disabled={isViewMode}
@@ -966,7 +999,7 @@ function SuratEditor() {
                           Nama Perusahaan
                         </td>
                         <td className="p-1">
-                          PT. Telkom Indonesia Tbk Regional III
+                          {namaPerusahaan}
                         </td>
                       </tr>
                       <tr className="border-b border-black">
@@ -976,7 +1009,7 @@ function SuratEditor() {
                         <td className="border-r border-black p-1 font-bold">
                           Alamat
                         </td>
-                        <td className="p-1">Jl. Ketintang No. 156, Surabaya</td>
+                        <td className="p-1">{alamatPerusahaan}</td>
                       </tr>
                       <tr className="border-b border-black">
                         <td className="border-r border-black p-1 align-top">
