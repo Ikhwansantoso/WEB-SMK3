@@ -7,85 +7,89 @@ async function main() {
   console.log('🌱 Start seeding...')
 
   // ==========================================
-  // 0. CEK DATA EKSISTING (IDEMPOTENCY)
+  // 1. BUAT USER (SDM) SECARA AMAN (UPSERT/CHECK)
   // ==========================================
-  // Jika sudah ada user, asumsikan DB sudah diseed sebelumnya.
-  const userCount = await prisma.user.count();
-  if (userCount > 0) {
-    console.log('⚠️  Data found (Users exist). Skipping seed process to preserve data.');
-    return;
+  
+  // A. ADMIN
+  const adminExists = await prisma.user.findUnique({ where: { email: 'admin@telkom.co.id' } })
+  let admin = adminExists
+  if (!admin) {
+    admin = await prisma.user.create({
+      data: {
+        email: 'admin@telkom.co.id',
+        name: 'Super Admin Telkom',
+        role: Role.ADMIN,
+        password: 'admin',
+      },
+    })
   }
 
-  console.log('🧹 Database empty. Starting fresh seed...');
-
-  // Clean up just in case (optional, but good for partial failures if any)
-  // Note: We only delete if we are sure we want to re-seed (which we are here)
-
-  await prisma.laporan.deleteMany();
-  await prisma.witel.deleteMany();
-  await prisma.temuanAudit.deleteMany();
-  await prisma.laporanKecelakaan.deleteMany();
-  await prisma.user.deleteMany();
-
-  console.log('🧹 Database cleaned for fresh seed');
-
-  // ==========================================
-  // 1. BUAT USER (SDM)
-  // ==========================================
-
-  // A. ADMIN
-  const admin = await prisma.user.create({
-    data: {
-      email: 'admin@telkom.co.id',
-      name: 'Super Admin Telkom',
-      role: Role.ADMIN,
-      password: 'admin',
-    },
-  })
-
   // B. AUDITOR
-  const auditor = await prisma.user.create({
-    data: {
-      email: 'auditor@telkom.co.id',
-      name: 'Budi Auditor',
-      role: Role.AUDITOR,
-      password: '123456',
-    },
-  })
+  const auditorExists = await prisma.user.findUnique({ where: { email: 'auditor@telkom.co.id' } })
+  let auditor = auditorExists
+  if (!auditor) {
+    auditor = await prisma.user.create({
+      data: {
+        email: 'auditor@telkom.co.id',
+        name: 'Budi Auditor',
+        role: Role.AUDITOR,
+        password: '123456',
+      },
+    })
+  }
 
   // C. PEGAWAI
-  const pegawai = await prisma.user.create({
-    data: {
-      email: 'pegawai@telkom.co.id',
-      name: 'Asep Teknisi',
-      role: Role.PEGAWAI,
-      password: '123456',
-    },
+  const pegawaiExists = await prisma.user.findUnique({ where: { email: 'pegawai@telkom.co.id' } })
+  if (!pegawaiExists) {
+    await prisma.user.create({
+      data: {
+        email: 'pegawai@telkom.co.id',
+        name: 'Asep Teknisi',
+        role: Role.PEGAWAI,
+        password: '123456',
+      },
+    })
+  }
+
+  console.log('✅ Users handled')
+
+  // ==========================================
+  // 2. BUAT TEMUAN AUDIT
+  // ==========================================
+  const temuanCount = await prisma.temuanAudit.count()
+  if (temuanCount === 0 && auditor) {
+    await prisma.temuanAudit.create({
+      data: {
+        judul: 'APAR Kadaluarsa',
+        deskripsi: 'Ditemukan 2 tabung APAR di lorong utama sudah melewati masa expired.',
+        lokasi: 'Lobby Utama',
+        kategori: KategoriTemuan.MAYOR,
+        status: StatusTemuan.OPEN,
+        deadline: new Date(new Date().setDate(new Date().getDate() + 30)),
+        auditorId: auditor.id,
+      }
+    })
+    console.log('✅ Audit data created')
+  }
+
+  // ==========================================
+  // 3. SYNC DATA WITEL (MONITORING)
+  // ==========================================
+  
+  // 1. Dapatkan semua ID witel yang memiliki laporan
+  const witelsWithLaporan = await prisma.laporan.findMany({
+    select: { witelId: true }
   })
+  const witelIdsWithLaporan = Array.from(new Set(witelsWithLaporan.map(l => l.witelId)))
 
-  console.log('✅ Users created')
-
-
-
-  // ==========================================
-  // 3. BUAT TEMUAN AUDIT
-  // ==========================================
-  await prisma.temuanAudit.create({
-    data: {
-      judul: 'APAR Kadaluarsa',
-      deskripsi: 'Ditemukan 2 tabung APAR di lorong utama sudah melewati masa expired.',
-      lokasi: 'Lobby Utama',
-      kategori: KategoriTemuan.MAYOR,
-      status: StatusTemuan.OPEN,
-      deadline: new Date(new Date().setDate(new Date().getDate() + 30)),
-      auditorId: auditor.id,
+  // 2. Hapus semua Witel lama yang tidak memiliki laporan
+  await prisma.witel.deleteMany({
+    where: {
+      id: { notIn: witelIdsWithLaporan }
     }
   })
-  console.log('✅ Audit data created')
 
-  // ==========================================
-  // 4. BUAT DATA WITEL (MONITORING)
-  // ==========================================
+  // 3. Masukkan 8 Witel baru jika belum ada
   const dataWitel = [
     { nama: 'Suramadu' },
     { nama: 'Solo Jateng Timur' },
@@ -98,11 +102,14 @@ async function main() {
   ]
 
   for (const w of dataWitel) {
-    await prisma.witel.create({ data: w })
+    const witelExists = await prisma.witel.findFirst({ where: { nama: w.nama } })
+    if (!witelExists) {
+      await prisma.witel.create({ data: w })
+    }
   }
 
-  console.log('✅ Witel data created')
-  console.log('🚀 Seeding finished. Database ready!')
+  console.log('✅ Witel data synced')
+  console.log('🚀 Seeding/Sync finished!')
 }
 
 main()
