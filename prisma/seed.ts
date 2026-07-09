@@ -87,19 +87,14 @@ async function main() {
   // 4. BUAT DATA WITEL (MONITORING)
   // ==========================================
   const dataWitel = [
-    { nama: 'Kantor Regional 3' },
-    { nama: 'Witel Surabaya Selatan' },
-    { nama: 'Witel Surabaya Utara' },
-    { nama: 'Witel Sidoarjo' },
-    { nama: 'Witel Malang' },
-    { nama: 'Witel Pasuruan' },
-    { nama: 'Witel Madiun' },
-    { nama: 'Witel Kediri' },
-    { nama: 'Witel Jember' },
-    { nama: 'Witel Denpasar' },
-    { nama: 'Witel Singaraja' },
-    { nama: 'Witel Mataram' },
-    { nama: 'Witel Kupang' },
+    { nama: 'Suramadu' },
+    { nama: 'Solo Jateng Timur' },
+    { nama: 'Semarang Jateng Utara' },
+    { nama: 'Yogya Jateng Selatan' },
+    { nama: 'Jatim Timur' },
+    { nama: 'Jatim Barat' },
+    { nama: 'Bali' },
+    { nama: 'Nusa Tenggara' },
   ]
 
   for (const w of dataWitel) {
