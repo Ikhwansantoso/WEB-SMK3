@@ -27,6 +27,9 @@ export default async function AdminSidebar() {
     redirect("/login");
   }
 
+  const cookieStore = await cookies();
+  const userRole = cookieStore.get("user_role")?.value;
+
   // AMBIL DATA NOTIFIKASI
   // 1. Audit yang masih "OPEN"
   const openAuditsCount = await prisma.temuanAudit.count({
@@ -118,45 +121,49 @@ export default async function AdminSidebar() {
           )}
         </Link>
 
-        <div className="my-4 border-t border-slate-100"></div>
-        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 ml-3">
-          Administrator
-        </div>
+        {userRole === "ADMIN" && (
+          <>
+            <div className="my-4 border-t border-slate-100"></div>
+            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 ml-3">
+              Administrator
+            </div>
 
-        <Link
-          href="/admin/users"
-          className="flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all group font-medium"
-        >
-          <Users
-            size={20}
-            className="group-hover:text-red-600 text-slate-400 transition-colors"
-          />
-          <span>Data Pengguna</span>
-        </Link>
+            <Link
+              href="/admin/users"
+              className="flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all group font-medium"
+            >
+              <Users
+                size={20}
+                className="group-hover:text-red-600 text-slate-400 transition-colors"
+              />
+              <span>Data Pengguna</span>
+            </Link>
 
-        {/* ADMINISTRASI SURAT (EDITOR) */}
-        <Link
-          href="/admin/surat"
-          className="flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all group font-medium"
-        >
-          <Printer
-            size={20}
-            className="group-hover:text-red-600 text-slate-400 transition-colors"
-          />
-          <span>Buat Surat</span>
-        </Link>
+            {/* ADMINISTRASI SURAT (EDITOR) */}
+            <Link
+              href="/admin/surat"
+              className="flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all group font-medium"
+            >
+              <Printer
+                size={20}
+                className="group-hover:text-red-600 text-slate-400 transition-colors"
+              />
+              <span>Buat Surat</span>
+            </Link>
 
-        {/* ARSIP SURAT (VIEWER) */}
-        <Link
-          href="/admin/arsip"
-          className="flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-all group font-medium"
-        >
-          <Archive
-            size={20}
-            className="group-hover:text-blue-600 text-slate-400 transition-colors"
-          />
-          <span>Arsip Surat</span>
-        </Link>
+            {/* ARSIP SURAT (VIEWER) */}
+            <Link
+              href="/admin/arsip"
+              className="flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-all group font-medium"
+            >
+              <Archive
+                size={20}
+                className="group-hover:text-blue-600 text-slate-400 transition-colors"
+              />
+              <span>Arsip Surat</span>
+            </Link>
+          </>
+        )}
       </nav>
 
       {/* --- FOOTER SIDEBAR --- */}

@@ -3,10 +3,18 @@ import { PrismaClient } from '@prisma/client'
 import { Plus, User, Shield, Inbox } from 'lucide-react'
 import Link from 'next/link'
 import DeleteButton from './DeleteUserButton'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 const prisma = new PrismaClient()
 
 export default async function UsersPage() {
+  const cookieStore = await cookies()
+  const userRole = cookieStore.get('user_role')?.value
+  if (userRole !== 'ADMIN') {
+    redirect('/admin/audit')
+  }
+
   const users = await prisma.user.findMany({
     orderBy: { createdAt: 'desc' }
   })

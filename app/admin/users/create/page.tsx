@@ -3,10 +3,16 @@ import { PrismaClient, Role } from '@prisma/client'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, UserPlus } from 'lucide-react'
+import { cookies } from 'next/headers'
 
 const prisma = new PrismaClient()
 
-export default function CreateUserPage() {
+export default async function CreateUserPage() {
+  const cookieStore = await cookies()
+  const userRole = cookieStore.get('user_role')?.value
+  if (userRole !== 'ADMIN') {
+    redirect('/admin/audit')
+  }
 
   async function createUser(formData: FormData) {
     'use server'
