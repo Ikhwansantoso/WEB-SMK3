@@ -74,10 +74,13 @@ export default async function UsersPage() {
                     {user.email}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-3 py-1.5 rounded-full text-xs font-bold inline-flex items-center gap-1.5 shadow-sm ${user.role === 'ADMIN'
+                    <span className={`px-3 py-1.5 rounded-full text-xs font-bold inline-flex items-center gap-1.5 shadow-sm ${
+                      user.role === 'ADMIN'
                         ? 'bg-purple-50 text-purple-700 border border-purple-100/50'
+                        : user.role === 'AUDITOR'
+                        ? 'bg-amber-50 text-amber-700 border border-amber-100/50'
                         : 'bg-blue-50 text-blue-700 border border-blue-100/50'
-                      }`}>
+                    }`}>
                       {user.role === 'ADMIN' ? <Shield size={12} /> : <User size={12} />}
                       {user.role}
                     </span>

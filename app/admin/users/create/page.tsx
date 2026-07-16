@@ -68,16 +68,22 @@ export default async function CreateUserPage() {
 
           <div className="space-y-2">
             <label className="text-sm font-bold text-slate-700">Role / Jabatan</label>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
                 <label className="cursor-pointer">
                     <input type="radio" name="role" value="PEGAWAI" className="peer sr-only" defaultChecked />
-                    <div className="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-700 font-bold transition">
+                    <div className="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-700 font-bold transition text-xs md:text-sm">
                         PEGAWAI
                     </div>
                 </label>
                 <label className="cursor-pointer">
+                    <input type="radio" name="role" value="AUDITOR" className="peer sr-only" />
+                    <div className="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 font-bold transition text-xs md:text-sm">
+                        AUDITOR
+                    </div>
+                </label>
+                <label className="cursor-pointer">
                     <input type="radio" name="role" value="ADMIN" className="peer sr-only" />
-                    <div className="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 peer-checked:bg-purple-50 peer-checked:border-purple-500 peer-checked:text-purple-700 font-bold transition">
+                    <div className="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 peer-checked:bg-purple-50 peer-checked:border-purple-500 peer-checked:text-purple-700 font-bold transition text-xs md:text-sm">
                         ADMIN
                     </div>
                 </label>

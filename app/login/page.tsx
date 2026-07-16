@@ -166,7 +166,7 @@ export default function LoginPage() {
             {/* Footer Form */}
             <div className="bg-black/10 px-8 py-4 border-t border-white/10 text-center backdrop-blur-sm">
               <p className="text-[10px] text-white/70 font-bold uppercase tracking-wide">
-                &copy; 2026 Asset Management TREG 3 | Build: 2026-07-09-1355
+                &copy; 2026 Asset Management TREG 3
               </p>
             </div>
           </div>

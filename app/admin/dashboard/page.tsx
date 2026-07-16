@@ -5,8 +5,12 @@ import {
   FileText,
   ShieldCheck,
   TrendingUp,
+  FolderArchive,
+  FileCheck,
+  FileWarning,
 } from "lucide-react";
 import IncidentChart from "./IncidentChart";
+import ArchiveCharts from "./ArchiveCharts";
 import Link from "next/link";
 
 export default async function AdminDashboard() {
@@ -23,6 +27,10 @@ export default async function AdminDashboard() {
     insidenBulanIni,
     totalIbpr,
     insidenTahunan,
+    totalArchive,
+    totalDigital,
+    totalNonDigital,
+    allDocuments,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.temuanAudit.count(),
@@ -51,6 +59,15 @@ export default async function AdminDashboard() {
         waktuKejadian: true,
       },
     }),
+    prisma.documentArchive.count(),
+    prisma.documentArchive.count({ where: { digitalStatus: "Sudah Digital" } }),
+    prisma.documentArchive.count({ where: { digitalStatus: "Belum Digital" } }),
+    prisma.documentArchive.findMany({
+      select: {
+        documentType: true,
+        documentDate: true,
+      }
+    }),
   ]);
 
   // 2. Olah Data untuk Grafik Bulanan
@@ -66,28 +83,44 @@ export default async function AdminDashboard() {
     return { name, total }; // Format data untuk Recharts
   });
 
+  // Olah Data Dokumen Berdasarkan Jenis untuk PieChart
+  const typeMap: Record<string, number> = {};
+  allDocuments.forEach(doc => {
+    typeMap[doc.documentType] = (typeMap[doc.documentType] || 0) + 1;
+  });
+  const typeChartData = Object.entries(typeMap).map(([name, value]) => ({
+    name,
+    value
+  }));
+
+  // Olah Data Dokumen Berdasarkan Tahun untuk AreaChart
+  const yearMap: Record<string, number> = {};
+  allDocuments.forEach(doc => {
+    try {
+      const y = new Date(doc.documentDate).getFullYear().toString();
+      yearMap[y] = (yearMap[y] || 0) + 1;
+    } catch (e) {}
+  });
+  const yearChartData = Object.entries(yearMap)
+    .map(([name, total]) => ({ name, total }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div className="p-4 md:p-8 space-y-8 bg-slate-50/50 min-h-screen">
 
-      {/* Header Dashboard */}
-      <div className="relative mb-8 p-10 bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-        {/* Ornamen Dekoratif */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 rounded-full -mr-20 -mt-32 blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-600/5 rounded-full -ml-10 -mb-20 blur-2xl pointer-events-none"></div>
-
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight leading-tight">
-              Dashboard Executive <span className="text-red-600">.</span>
-            </h1>
-            <p className="text-slate-500 mt-2 text-lg font-medium max-w-xl">
-              Pusat Monitoring K3 & Repository Dokumen Telkom Regional 3. Amati ringkasan kinerja terkini dengan cepat.
-            </p>
-          </div>
+      {/* Baris Atas: Welcome Message */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+        <div>
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Dashboard Eksekutif</h1>
+          <p className="text-slate-500 text-sm mt-1">Sistem Informasi Monitoring K3 - PT Telkom Indonesia</p>
+        </div>
+        <div className="flex items-center gap-3 bg-red-50 text-red-600 px-4 py-2 rounded-2xl border border-red-100/50 text-sm font-bold shadow-sm">
+          <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
+          Live Monitoring
         </div>
       </div>
 
-      {/* Grid Statistik Utama (4 Kolom) */}
+      {/* Grid Utama Statistik Card */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
 
         {/* Card 1: Insiden K3 */}
@@ -103,14 +136,12 @@ export default async function AdminDashboard() {
                 <AlertTriangle size={24} strokeWidth={2.5} />
               </div>
             </div>
-
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-xs font-bold text-red-600 bg-red-50/80 px-3 py-1.5 rounded-xl border border-red-100 shadow-sm">
-                • {totalInsidenOpen} Belum Selesai
+              <span className="text-xs font-bold text-red-600 bg-red-50 px-3 py-1.5 rounded-xl border border-red-100 shadow-sm">
+                {totalInsidenOpen} Aktif
               </span>
-              <span className="text-xs font-bold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-1">
-                <TrendingUp size={12} className="text-red-500" />
-                {insidenBulanIni} Bulan ini
+              <span className="text-xs font-semibold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+                {insidenBulanIni} Bulan Ini
               </span>
             </div>
           </div>
@@ -129,10 +160,12 @@ export default async function AdminDashboard() {
                 <FileText size={24} strokeWidth={2.5} />
               </div>
             </div>
-
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-xs font-bold text-amber-600 bg-amber-50/80 px-3 py-1.5 rounded-xl border border-amber-100 shadow-sm">
-                • {totalAuditOpen} Masih Open
+              <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100 shadow-sm">
+                {totalAuditOpen} Open
+              </span>
+              <span className="text-xs font-semibold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+                {totalAudit - totalAuditOpen} Closed
               </span>
             </div>
           </div>
@@ -140,20 +173,20 @@ export default async function AdminDashboard() {
 
         {/* Card 3: Dokumen IBPR */}
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
           <div className="relative z-10 flex flex-col justify-between h-full w-full">
             <div className="flex justify-between items-start w-full">
               <div>
                 <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Dokumen IBPR</p>
                 <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalIbpr}</h3>
               </div>
-              <div className="p-3 bg-white/80 backdrop-blur-sm border border-indigo-100 text-indigo-600 rounded-2xl shadow-sm drop-shadow-sm">
-                <ShieldCheck size={24} strokeWidth={2.5} />
+              <div className="p-3 bg-white/80 backdrop-blur-sm border border-amber-100 text-amber-600 rounded-2xl shadow-sm drop-shadow-sm">
+                <TrendingUp size={24} strokeWidth={2.5} />
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
-                Penilaian Risiko Terdaftar
+                Bahaya & Pengendalian
               </span>
             </div>
           </div>
@@ -175,6 +208,69 @@ export default async function AdminDashboard() {
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
                 Pengguna Sistem Aktif
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 5: Total Arsip Dokumen */}
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+          <div className="relative z-10 flex flex-col justify-between h-full w-full">
+            <div className="flex justify-between items-start w-full">
+              <div>
+                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Total Arsip</p>
+                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalArchive}</h3>
+              </div>
+              <div className="p-3 bg-white/80 backdrop-blur-sm border border-red-100 text-red-600 rounded-2xl shadow-sm drop-shadow-sm">
+                <FolderArchive size={24} strokeWidth={2.5} />
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+                Dokumen Terdaftar
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 6: Dokumen Sudah Digital */}
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+          <div className="relative z-10 flex flex-col justify-between h-full w-full">
+            <div className="flex justify-between items-start w-full">
+              <div>
+                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Sudah Digital</p>
+                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalDigital}</h3>
+              </div>
+              <div className="p-3 bg-white/80 backdrop-blur-sm border border-green-100 text-green-600 rounded-2xl shadow-sm drop-shadow-sm">
+                <FileCheck size={24} strokeWidth={2.5} />
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="text-xs font-bold text-green-600 bg-green-50/80 px-3 py-1.5 rounded-xl border border-green-100 shadow-sm">
+                • {totalDigital} Ter-scan
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 7: Dokumen Belum Digital */}
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+          <div className="relative z-10 flex flex-col justify-between h-full w-full">
+            <div className="flex justify-between items-start w-full">
+              <div>
+                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Belum Digital</p>
+                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalNonDigital}</h3>
+              </div>
+              <div className="p-3 bg-white/80 backdrop-blur-sm border border-amber-100 text-amber-600 rounded-2xl shadow-sm drop-shadow-sm">
+                <FileWarning size={24} strokeWidth={2.5} />
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="text-xs font-bold text-amber-600 bg-amber-50/80 px-3 py-1.5 rounded-xl border border-amber-100 shadow-sm">
+                • {totalNonDigital} Belum Ter-scan
               </span>
             </div>
           </div>
@@ -209,7 +305,7 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        {/* Side Panel Promosi / Info Tambahan (Opsional, Pemanis UI) */}
+        {/* Side Panel Promosi / Info Tambahan */}
         <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl shadow-lg border border-slate-700 p-8 flex flex-col justify-between relative overflow-hidden text-white">
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
           <div className="relative z-10 mb-8">
@@ -233,6 +329,9 @@ export default async function AdminDashboard() {
         </div>
 
       </div>
+
+      {/* Area Grafik Arsip Dokumen (Baru) */}
+      <ArchiveCharts typeData={typeChartData} yearData={yearChartData} />
 
     </div>
   );

@@ -9,7 +9,7 @@ async function main() {
   // ==========================================
   // 1. BUAT USER (SDM) SECARA AMAN (UPSERT/CHECK)
   // ==========================================
-  
+
   // A. ADMIN
   const adminExists = await prisma.user.findUnique({ where: { email: 'admin@telkom.co.id' } })
   let admin = adminExists
@@ -75,7 +75,7 @@ async function main() {
   // ==========================================
   // 3. SYNC DATA WITEL (MONITORING)
   // ==========================================
-  
+
   // 1. Dapatkan semua ID witel yang memiliki laporan
   const witelsWithLaporan = await prisma.laporan.findMany({
     select: { witelId: true }
@@ -109,6 +109,55 @@ async function main() {
   }
 
   console.log('✅ Witel data synced')
+
+  // ==========================================
+  // 4. BUAT DATA DOKUMEN ARSIP (NEW)
+  // ==========================================
+  const docCount = await prisma.documentArchive.count()
+  if (docCount === 0) {
+    await prisma.documentArchive.createMany({
+      data: [
+        {
+          documentNumber: 'ND.001/GS-R3/2025',
+          title: 'Nota Dinas Pengadaan Alat Pelindung Diri (APD)',
+          documentType: 'Nota Dinas',
+          documentDate: new Date('2025-03-12'),
+          division: 'General Support',
+          digitalStatus: 'Sudah Digital',
+          filePath: null
+        },
+        {
+          documentNumber: 'BA.042/LOG-TREG3/2026',
+          title: 'Berita Acara Serah Terima Aset Lapangan',
+          documentType: 'Berita Acara',
+          documentDate: new Date('2026-06-18'),
+          division: 'General Support',
+          digitalStatus: 'Sudah Digital',
+          filePath: null
+        },
+        {
+          documentNumber: 'BAST.098/FAC-R3/2026',
+          title: 'BAST Renovasi Gedung Operasional',
+          documentType: 'BAST',
+          documentDate: new Date('2026-07-02'),
+          division: 'Facilities Management',
+          digitalStatus: 'Belum Digital',
+          filePath: null
+        },
+        {
+          documentNumber: 'SM.110/HR-R3/2026',
+          title: 'Surat Masuk Dinas Kesehatan Regional',
+          documentType: 'Surat Masuk',
+          documentDate: new Date('2026-07-05'),
+          division: 'General Support',
+          digitalStatus: 'Belum Digital',
+          filePath: null
+        }
+      ]
+    })
+    console.log('✅ Document archive data seeded')
+  }
+
   console.log('🚀 Seeding/Sync finished!')
 }
 

@@ -1,36 +1,50 @@
 import type { Metadata } from "next";
-import AdminSidebar from "./AdminSidebar";
-import AdminHeader from "./AdminHeader"; // <--- Import Header Baru
+import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import AdminLayoutClient from "./AdminLayoutClient";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard - SMK3 Telkom",
   description: "Panel Admin Sistem Manajemen K3",
 };
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("user_id")?.value;
+  const userRole = cookieStore.get("user_role")?.value || "GUEST";
+
+  let userName = "Admin";
+
+  try {
+    if (userId) {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (user) {
+        userName = user.name || "Admin";
+      }
+    }
+  } catch (error) {
+    console.error("Layout load user error:", error);
+  }
+
+  // AMBIL DATA NOTIFIKASI SECARA DINAMIS
+  const openAuditsCount = await prisma.temuanAudit.count({
+    where: { status: "OPEN" },
+  });
+
+  const incidentsCount = await prisma.laporanKecelakaan.count();
+
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      
-      {/* SIDEBAR (Tetap di Kiri) */}
-      <AdminSidebar />
-
-      {/* KONTEN UTAMA (Di Kanan) */}
-      <div className="flex-1 ml-64 flex flex-col">
-        
-        {/* HEADER (Di Paling Atas) */}
-        <AdminHeader />
-
-        {/* ISI HALAMAN (Dashboard, Audit, dll) */}
-        <main className="p-8 flex-1 overflow-y-auto">
-          {children}
-        </main>
-        
-      </div>
-
-    </div>
+    <AdminLayoutClient
+      userName={userName}
+      userRole={userRole}
+      openAuditsCount={openAuditsCount}
+      incidentsCount={incidentsCount}
+    >
+      {children}
+    </AdminLayoutClient>
   );
 }

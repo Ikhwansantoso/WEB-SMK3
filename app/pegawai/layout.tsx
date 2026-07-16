@@ -1,22 +1,17 @@
-import PegawaiSidebar from "./components/pegawaisidebar";
+import { cookies } from "next/headers";
+import PegawaiLayoutClient from "./components/PegawaiLayoutClient";
 
-export default function PegawaiLayout({
+export default async function PegawaiLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Navigasi (Otomatis milih Sidebar atau Bottom Bar) */}
-      <PegawaiSidebar />
+  const cookieStore = await cookies();
+  const userName = cookieStore.get("user_name")?.value || "Pegawai";
 
-      {/* Logic Padding:
-         md:pl-64 -> Di Laptop, geser konten ke kanan 256px (tempat sidebar)
-         pb-24    -> Di HP, kasih jarak bawah biar konten paling bawah gak ketutup menu
-      */}
-      <main className="md:pl-64 pb-24 md:pb-8 transition-all duration-300">
-        {children}
-      </main>
-    </div>
+  return (
+    <PegawaiLayoutClient userName={userName}>
+      {children}
+    </PegawaiLayoutClient>
   );
 }
