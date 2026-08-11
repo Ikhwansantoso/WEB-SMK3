@@ -20,13 +20,13 @@ export default async function Page() {
 
     return (
         <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8">
-            <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                 <div>
-                    <h1 className="text-2xl font-black text-slate-800 flex items-center gap-3">
-                        <AlertOctagon className="text-blue-600" size={32} />
+                    <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 flex items-center gap-3">
+                        <AlertOctagon className="text-blue-600 dark:text-blue-400" size={32} />
                         Identifikasi Bahaya & Risiko (IBPR)
                     </h1>
-                    <p className="text-slate-500 mt-1">Manajemen data potensi bahaya dan pengendalian risiko K3.</p>
+                    <p className="text-slate-500 dark:text-slate-400 mt-1">Manajemen data potensi bahaya dan pengendalian risiko K3.</p>
                 </div>
             </div>
 

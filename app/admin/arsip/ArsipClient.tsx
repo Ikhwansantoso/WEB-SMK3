@@ -235,7 +235,7 @@ _Dokumen PDF terlampir (High Quality)._
   );
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50 font-sans relative">
+    <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-950 font-sans relative">
       <style jsx global>{`
         :root {
           --background: 0 0% 100%;
@@ -271,19 +271,19 @@ _Dokumen PDF terlampir (High Quality)._
       {/* MODAL CONFIG */}
       {showTelModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-xl shadow-2xl w-[400px] animate-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-2xl w-[400px] border border-slate-100 dark:border-slate-800 animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
+              <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <Settings size={18} /> Pengaturan Telegram
               </h3>
               <button
                 onClick={() => setShowTelModal(false)}
-                className="text-slate-400 hover:text-red-500"
+                className="text-slate-400 hover:text-red-500 dark:hover:text-red-400"
               >
                 <X size={20} />
               </button>
             </div>
-            <p className="text-xs text-slate-500 mb-4 bg-slate-50 p-3 rounded border">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 bg-slate-50 dark:bg-slate-800 p-3 rounded border border-slate-200 dark:border-slate-700">
               Masukkan <b>Bot Token</b> dan <b>Chat ID</b> agar sistem bisa
               mengirim PDF otomatis ke Grup Telegram.
             </p>
@@ -298,7 +298,7 @@ _Dokumen PDF terlampir (High Quality)._
                     botToken: e.target.value,
                   })
                 }
-                className="w-full border p-2 rounded text-sm text-black"
+                className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 rounded text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
               <input
                 type="text"
@@ -310,7 +310,7 @@ _Dokumen PDF terlampir (High Quality)._
                     chatId: e.target.value,
                   })
                 }
-                className="w-full border p-2 rounded text-sm text-black"
+                className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 rounded text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
               <button
                 onClick={saveConfigAndSend}
@@ -324,16 +324,16 @@ _Dokumen PDF terlampir (High Quality)._
       )}
 
       {/* HEADER */}
-      <div className="p-6 bg-white border-b border-slate-200 flex justify-between items-center shadow-sm sticky top-0 z-10">
+      <div className="p-6 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center shadow-sm sticky top-0 z-10">
         <div className="flex items-center gap-3">
           <div className="bg-blue-600 p-2.5 rounded-xl text-white">
             <Archive size={24} />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold text-slate-800">
+            <h1 className="text-xl font-extrabold text-slate-800 dark:text-slate-100">
               Arsip Surat
             </h1>
-            <p className="text-xs text-slate-500 font-bold uppercase tracking-wide">
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide">
               Database Dokumen
             </p>
           </div>
@@ -342,14 +342,14 @@ _Dokumen PDF terlampir (High Quality)._
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowTelModal(true)}
-            className="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-3 rounded-xl transition"
+            className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-3 rounded-xl transition"
             title="Atur Telegram Bot"
           >
             <Settings size={20} />
           </button>
           <Link
             href="/admin/surat"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-200 transition transform hover:scale-105 active:scale-95"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-200 dark:shadow-none transition transform hover:scale-105 active:scale-95"
           >
             <Plus size={18} /> BUAT SURAT BARU
           </Link>
@@ -368,7 +368,7 @@ _Dokumen PDF terlampir (High Quality)._
             placeholder="Cari Nomor Surat atau Perihal..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-50 outline-none transition shadow-sm text-sm font-medium text-black placeholder:text-slate-400"
+            className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-50 dark:focus:ring-blue-950/40 outline-none transition shadow-sm text-sm font-medium text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
@@ -377,26 +377,26 @@ _Dokumen PDF terlampir (High Quality)._
             filteredList.map((item) => (
               <div
                 key={item.id}
-                className="bg-white p-5 rounded-xl border border-slate-200 hover:border-blue-300 hover:shadow-md transition flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group cursor-default"
+                className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group cursor-default"
               >
                 <div className="flex-1 w-full">
                   <div className="flex items-center gap-2 mb-2">
                     <span
                       className={`text-[10px] font-bold px-2 py-1 rounded border ${item.type === "UNDANGAN"
-                        ? "bg-red-50 text-red-600 border-red-100"
-                        : "bg-green-50 text-green-600 border-green-100"
+                        ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/50"
+                        : "bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/50"
                         }`}
                     >
                       {item.type}
                     </span>
-                    <span className="text-[10px] font-medium text-slate-400 flex items-center gap-1">
+                    <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 flex items-center gap-1">
                       • {item.createdAt}
                     </span>
                   </div>
-                  <h3 className="font-bold text-slate-800 text-base mb-1">
+                  <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base mb-1">
                     {item.nomor}
                   </h3>
-                  <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                     {item.perihal}
                   </p>
                 </div>
@@ -405,21 +405,21 @@ _Dokumen PDF terlampir (High Quality)._
                   <button
                     onClick={() => handleOpenTelegram(item)}
                     disabled={isSending}
-                    className="px-4 py-2.5 bg-sky-50 text-sky-600 border border-sky-200 rounded-lg text-xs font-bold hover:bg-sky-500 hover:text-white transition flex items-center justify-center gap-2"
+                    className="px-4 py-2.5 bg-sky-50 dark:bg-sky-950/40 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-900/50 rounded-lg text-xs font-bold hover:bg-sky-500 hover:text-white transition flex items-center justify-center gap-2"
                   >
                     <Send size={16} /> {isSending ? "..." : "TELEGRAM"}
                   </button>
 
                   <button
                     onClick={() => handleDownloadClick(item)}
-                    className="px-4 py-2.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-bold hover:bg-slate-200 transition flex items-center justify-center gap-2"
+                    className="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center justify-center gap-2"
                   >
                     <Download size={16} /> PDF
                   </button>
 
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="p-2.5 bg-white border border-slate-200 text-slate-400 rounded-lg hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition"
+                    className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-900/50 transition"
                   >
                     <Trash2 size={18} />
                   </button>
@@ -428,13 +428,13 @@ _Dokumen PDF terlampir (High Quality)._
             ))
           ) : (
             <div className="text-center py-20 flex flex-col items-center justify-center h-full">
-              <div className="bg-slate-100 w-24 h-24 rounded-full flex items-center justify-center mb-6 text-slate-300">
+              <div className="bg-slate-100 dark:bg-slate-800 w-24 h-24 rounded-full flex items-center justify-center mb-6 text-slate-300 dark:text-slate-600">
                 <Archive size={48} />
               </div>
-              <h3 className="text-slate-800 font-bold text-lg mb-1">
+              <h3 className="text-slate-800 dark:text-slate-100 font-bold text-lg mb-1">
                 Belum ada arsip
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Buat surat baru untuk melihatnya di sini.
               </p>
             </div>

@@ -61,11 +61,11 @@ export default function LaporAuditPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+      <form onSubmit={handleSubmit} className="space-y-5 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
 
         {/* PILIHAN KONDISI (AMAN / TIDAK) */}
         <div>
-          <label className="text-xs font-bold text-slate-700 mb-2 block uppercase tracking-wider">Status Kondisi</label>
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-2 block uppercase tracking-wider">Status Kondisi</label>
           <div className="grid grid-cols-2 gap-4">
             {/* Input Hidden untuk kirim data ke Server Action */}
             <input type="hidden" name="kondisi" value={kondisi} />
@@ -74,8 +74,8 @@ export default function LaporAuditPage() {
               type="button"
               onClick={() => setKondisi("AMAN")}
               className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${kondisi === "AMAN"
-                ? "border-green-500 bg-green-50 text-green-700 shadow-md shadow-green-100"
-                : "border-slate-200 text-slate-400 hover:border-green-200"
+                ? "border-green-500 bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 shadow-md shadow-green-100 dark:shadow-none"
+                : "border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:border-green-200 dark:hover:border-green-800"
                 }`}
             >
               <ShieldCheck size={32} />
@@ -86,8 +86,8 @@ export default function LaporAuditPage() {
               type="button"
               onClick={() => setKondisi("BUTUH_PERBAIKAN")}
               className={`p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${kondisi === "BUTUH_PERBAIKAN"
-                ? "border-red-500 bg-red-50 text-red-700 shadow-md shadow-red-100"
-                : "border-slate-200 text-slate-400 hover:border-red-200"
+                ? "border-red-500 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 shadow-md shadow-red-100 dark:shadow-none"
+                : "border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:border-red-200 dark:hover:border-red-800"
                 }`}
             >
               <AlertOctagon size={32} />
@@ -98,64 +98,63 @@ export default function LaporAuditPage() {
 
         {/* Input Waktu */}
         <div>
-          <label className="text-xs font-bold text-slate-700 mb-1 block">Waktu Inspeksi</label>
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-1 block">Waktu Inspeksi</label>
           <div className="relative">
-            <Clock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+            <Clock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400" size={18} />
             <input
               type="datetime-local"
               name="waktuTemuan"
               required
-              className="w-full bg-white border border-slate-600 pl-10 pr-4 py-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 placeholder:text-slate-500 shadow-sm"
+              className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 pl-10 pr-4 py-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm"
             />
           </div>
         </div>
 
         {/* Input Judul */}
         <div>
-          <label className="text-xs font-bold text-slate-700 mb-1 block">Judul Temuan / Area</label>
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-1 block">Judul Temuan / Area</label>
           <input
             name="judul"
             required
             placeholder={kondisi === 'AMAN' ? "Contoh: Area Panel Listrik Rapi" : "Contoh: Kabel Terkelupas"}
-            className="w-full bg-white border border-slate-600 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 placeholder:text-slate-500 shadow-sm"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm"
           />
         </div>
 
         {/* Input Lokasi */}
         <div>
-          <label className="text-xs font-bold text-slate-700 mb-1 block">Lokasi</label>
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-1 block">Lokasi</label>
           <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400" size={18} />
             <input
               name="lokasi"
               required
               placeholder="Contoh: Ruang Server Lt.2"
-              className="w-full bg-white border border-slate-600 pl-10 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 placeholder:text-slate-500 shadow-sm"
+              className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 pl-10 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm"
             />
           </div>
         </div>
 
         {/* Input Deskripsi */}
         <div>
-          <label className="text-xs font-bold text-slate-700 mb-1 block">Catatan / Deskripsi</label>
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-1 block">Catatan / Deskripsi</label>
           <textarea
             name="deskripsi"
             rows={3}
             placeholder="Tuliskan detail kondisi..."
-            className="w-full bg-white border border-slate-600 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 placeholder:text-slate-500 shadow-sm"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm"
           ></textarea>
         </div>
 
         {/* Input Foto */}
         <div>
-          <label className="text-xs font-bold text-slate-700 mb-1 block">Foto Bukti</label>
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-1 block">Foto Bukti</label>
           <input
             type="file"
             name="foto"
             accept="image/*"
-            // Kalau Aman foto opsional, kalau bahaya wajib
             required={kondisi === "BUTUH_PERBAIKAN"}
-            className="block w-full text-sm text-slate-900 border border-slate-500 rounded-xl cursor-pointer bg-white file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-white hover:file:bg-slate-900"
+            className="block w-full text-sm text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl cursor-pointer bg-white dark:bg-slate-800 file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 dark:file:bg-slate-700 file:text-white hover:file:bg-slate-900"
           />
         </div>
 
@@ -163,8 +162,8 @@ export default function LaporAuditPage() {
           disabled={loading}
           type="submit"
           className={`w-full font-bold py-3.5 rounded-xl flex justify-center items-center gap-2 transition-all active:scale-95 shadow-lg ${kondisi === 'AMAN'
-            ? "bg-green-600 hover:bg-green-700 text-white shadow-green-200"
-            : "bg-red-600 hover:bg-red-700 text-white shadow-red-200"
+            ? "bg-green-600 hover:bg-green-700 text-white shadow-green-200 dark:shadow-none"
+            : "bg-red-600 hover:bg-red-700 text-white shadow-red-200 dark:shadow-none"
             }`}
         >
           {loading ? <Loader2 className="animate-spin" /> : "KIRIM LAPORAN"}

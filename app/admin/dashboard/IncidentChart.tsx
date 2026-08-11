@@ -26,14 +26,14 @@ export default function IncidentChart({ data }: IncidentChartProps) {
     const CustomTooltip = ({ active, payload, label }: any) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-slate-100 flex flex-col gap-1 min-w-[120px]">
-                    <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
+                <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 flex flex-col gap-1 min-w-[120px]">
+                    <p className="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">
                         Bulan {label}
                     </p>
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-red-500 shadow-sm shadow-red-500/50"></div>
-                        <p className="text-2xl font-black text-slate-800 tracking-tighter">
-                            {payload[0].value} <span className="text-sm font-medium text-slate-500">Insiden</span>
+                        <p className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tighter">
+                            {payload[0].value} <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Insiden</span>
                         </p>
                     </div>
                 </div>

@@ -4,22 +4,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   Home, 
-  FolderOpen, 
   AlertTriangle, 
   Ambulance, 
   UserCircle,
   LogOut,
   FolderArchive,
+  Layers,
   X,
 } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 
 const menuItems = [
   { name: "Beranda", href: "/pegawai/dashboard", icon: Home },
-  { name: "Dokumen", href: "/pegawai/ipbr", icon: FolderOpen },
   { name: "Lapor", href: "/pegawai/audit", icon: AlertTriangle },
   { name: "Insiden", href: "/pegawai/kecelakaan", icon: Ambulance },
   { name: "Arsip Dokumen", href: "/pegawai/archive", icon: FolderArchive },
+  { name: "Document Tools", href: "/pegawai/document-tools", icon: Layers },
 ];
 
 interface SidebarContentProps {
@@ -51,7 +51,7 @@ export default function SidebarContent({
 
   return (
     <aside
-      className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white border-r border-slate-200 transition-all duration-300 shadow-xl md:translate-x-0 ${
+      className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-300 shadow-xl md:translate-x-0 ${
         isCollapsed ? "md:w-20" : "md:w-64"
       } ${isMobileOpen ? "translate-x-0 w-64" : "-translate-x-full"}`}
     >
@@ -106,32 +106,18 @@ export default function SidebarContent({
                 isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
               } ${
                 isActive
-                  ? "bg-red-50 text-red-600 border border-red-100 shadow-sm"
-                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                  ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+                  : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 hover:text-slate-800 dark:hover:bg-slate-800 dark:hover:text-white"
               }`}
             >
               <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
-                <item.icon size={18} className={isActive ? "text-red-600" : "text-slate-400"} />
+                <item.icon size={18} className={isActive ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"} />
               </div>
               {(!isCollapsed || isMobileOpen) && <span>{item.name}</span>}
             </Link>
           );
         })}
       </nav>
-      
-      {/* FOOTER DENGAN TOMBOL LOGOUT */}
-      <div className="p-4 border-t border-slate-100 shrink-0">
-        <button 
-          onClick={() => logout()}
-          title="Keluar Aplikasi"
-          className="w-full flex items-center justify-center p-3 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all font-medium text-sm group"
-        >
-          <div className="w-5 h-5 flex items-center justify-center shrink-0">
-            <LogOut size={18} className="group-hover:text-red-600 transition-colors shrink-0"/>
-          </div>
-          {(!isCollapsed || isMobileOpen) && <span className="ml-2">Keluar Aplikasi</span>}
-        </button>
-      </div>
     </aside>
   );
 }

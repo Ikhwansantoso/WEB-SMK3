@@ -655,21 +655,21 @@ function SuratEditor() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50 font-sans fixed inset-0 z-50">
+    <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 font-sans fixed inset-0 z-50">
       {/* --- SIDEBAR EDITOR (KIRI) --- */}
-      <div className="w-[400px] bg-white border-r border-slate-200 flex flex-col shadow-2xl z-20 flex-shrink-0 h-screen">
+      <div className="w-[400px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shadow-2xl z-20 flex-shrink-0 h-screen">
         {/* 1. HEADER SIDEBAR (FIXED) */}
-        <div className="p-6 border-b border-slate-100 bg-white space-y-5 shrink-0">
+        <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-5 shrink-0">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3 text-red-600">
-              <div className="bg-red-50 p-2.5 rounded-xl">
+            <div className="flex items-center gap-3 text-red-600 dark:text-red-400">
+              <div className="bg-red-50 dark:bg-red-950/40 p-2.5 rounded-xl">
                 <PenTool size={22} />
               </div>
               <div>
-                <h2 className="font-extrabold text-slate-800 text-xl leading-none">
+                <h2 className="font-extrabold text-slate-800 dark:text-slate-100 text-xl leading-none">
                   {isViewMode ? "Lihat Arsip" : "Editor Surat"}
                 </h2>
-                <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest mt-1">
                   SMK3 System
                 </p>
               </div>
@@ -677,7 +677,7 @@ function SuratEditor() {
             {/* Tombol Back hanya muncul jika bukan dari sidebar */}
             <Link
               href="/admin/arsip"
-              className="p-2 hover:bg-slate-50 rounded-full text-slate-400 hover:text-red-600 transition"
+              className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition"
             >
               <ArrowLeft size={22} />
             </Link>
@@ -685,17 +685,17 @@ function SuratEditor() {
 
           {/* SWITCHER TEMPLATE (Hanya aktif di Mode Buat Baru) */}
           <div
-            className={`bg-slate-100 p-1.5 rounded-xl flex shadow-inner ${isViewMode ? "opacity-50 pointer-events-none" : ""}`}
+            className={`bg-slate-100 dark:bg-slate-800 p-1.5 rounded-xl flex shadow-inner ${isViewMode ? "opacity-50 pointer-events-none" : ""}`}
           >
             <button
               onClick={() => setTemplate("UNDANGAN")}
-              className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all ${template === "UNDANGAN" ? "bg-white text-red-600 shadow-sm ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-700"}`}
+              className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all ${template === "UNDANGAN" ? "bg-white dark:bg-slate-900 text-red-600 dark:text-red-400 shadow-sm ring-1 ring-slate-200 dark:ring-slate-700" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"}`}
             >
               Undangan
             </button>
             <button
               onClick={() => setTemplate("LAPORAN")}
-              className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all ${template === "LAPORAN" ? "bg-white text-green-600 shadow-sm ring-1 ring-slate-200" : "text-slate-500 hover:text-slate-700"}`}
+              className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all ${template === "LAPORAN" ? "bg-white dark:bg-slate-900 text-green-600 dark:text-green-400 shadow-sm ring-1 ring-slate-200 dark:ring-slate-700" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"}`}
             >
               Laporan
             </button>
@@ -703,7 +703,7 @@ function SuratEditor() {
         </div>
 
         {/* 2. TAB NAV (FIXED) */}
-        <div className="flex border-b border-slate-100 bg-white text-[11px] uppercase tracking-wide px-2 shrink-0">
+        <div className="flex border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 text-[11px] uppercase tracking-wide px-2 shrink-0">
           <TabButton
             label="1. Header"
             active={activeTab === "HEADER"}
@@ -723,20 +723,19 @@ function SuratEditor() {
 
         {/* 3. SCROLLABLE CONTENT (FLEX-1) */}
         <div
-          className={`flex-1 overflow-y-auto p-6 custom-scrollbar bg-white ${isViewMode ? "opacity-90" : ""}`}
+          className={`flex-1 overflow-y-auto p-6 custom-scrollbar bg-white dark:bg-slate-900 ${isViewMode ? "opacity-90" : ""}`}
         >
           {renderInputContent()}
         </div>
 
         {/* 4. FOOTER ACTIONS (FIXED BOTTOM) */}
-        <div className="p-4 border-t border-slate-100 bg-white space-y-2 shrink-0 z-20 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2 shrink-0 z-20 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
           {isViewMode ? (
             // MODE ARSIP: Hanya boleh CETAK
             <>
-              handleDownloadPDF
               <Link
                 href="/admin/arsip"
-                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 py-3 rounded-xl font-bold flex justify-center items-center gap-2 transition"
+                className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 py-3 rounded-xl font-bold flex justify-center items-center gap-2 transition"
               >
                 <ArrowLeft size={18} /> KEMBALI KE ARSIP
               </Link>
@@ -746,11 +745,11 @@ function SuratEditor() {
             <>
               <button
                 onClick={handleSaveArsip}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-200 flex justify-center items-center gap-2 transition transform active:scale-[0.98]"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-200 dark:shadow-none flex justify-center items-center gap-2 transition transform active:scale-[0.98]"
               >
                 <Save size={18} /> SIMPAN KE ARSIP
               </button>
-              <p className="text-[10px] text-center text-slate-400 mt-2 font-medium">
+              <p className="text-[10px] text-center text-slate-400 dark:text-slate-500 mt-2 font-medium">
                 *Surat harus disimpan ke arsip sebelum diunduh.
               </p>
             </>
@@ -759,21 +758,21 @@ function SuratEditor() {
       </div>
 
       {/* --- PREVIEW AREA (KANAN) --- */}
-      <div className="flex-1 bg-slate-100 relative flex flex-col overflow-hidden">
+      <div className="flex-1 bg-slate-100 dark:bg-slate-950 relative flex flex-col overflow-hidden">
         {/* Toolbar Zoom */}
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-xl border border-white/50 flex items-center gap-4 z-30">
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-full shadow-xl border border-white/50 dark:border-slate-800 flex items-center gap-4 z-30">
           <button
             onClick={() => setZoom((z) => Math.max(0.3, z - 0.1))}
-            className="p-1.5 hover:bg-slate-100 rounded-full text-slate-600 transition"
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-600 dark:text-slate-300 transition"
           >
             <ZoomOut size={16} />
           </button>
-          <span className="text-xs font-bold font-mono w-12 text-center text-slate-800">
+          <span className="text-xs font-bold font-mono w-12 text-center text-slate-800 dark:text-slate-100">
             {Math.round(zoom * 100)}%
           </span>
           <button
             onClick={() => setZoom((z) => Math.min(1.5, z + 0.1))}
-            className="p-1.5 hover:bg-slate-100 rounded-full text-slate-600 transition"
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-600 dark:text-slate-300 transition"
           >
             <ZoomIn size={16} />
           </button>
@@ -1204,7 +1203,7 @@ function InputGroup({
 }) {
   return (
     <div className="space-y-1">
-      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+      <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
         {label}
       </label>
       <input
@@ -1212,7 +1211,7 @@ function InputGroup({
         type="text"
         value={val}
         onChange={(e) => set(e.target.value)}
-        className="w-full py-2 bg-transparent border-b border-slate-300 text-sm font-medium text-black outline-none focus:border-red-600 transition placeholder:text-slate-300 disabled:bg-slate-50 disabled:text-slate-500"
+        className="w-full py-2 bg-transparent border-b border-slate-300 dark:border-slate-700 text-sm font-medium text-slate-800 dark:text-slate-100 outline-none focus:border-red-600 dark:focus:border-red-400 transition placeholder:text-slate-300 dark:placeholder:text-slate-600 disabled:bg-slate-50 dark:disabled:bg-slate-800 disabled:text-slate-500 dark:disabled:text-slate-400"
         placeholder="..."
       />
     </div>
@@ -1223,7 +1222,7 @@ function TabButton({ label, active, onClick }: any) {
   return (
     <button
       onClick={onClick}
-      className={`flex-1 py-3 text-xs font-bold flex justify-center items-center border-b-2 transition ${active ? "border-red-600 text-red-600" : "border-transparent text-slate-400 hover:text-slate-600"}`}
+      className={`flex-1 py-3 text-xs font-bold flex justify-center items-center border-b-2 transition ${active ? "border-red-600 text-red-600 dark:border-red-400 dark:text-red-400" : "border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
     >
       {label}
     </button>

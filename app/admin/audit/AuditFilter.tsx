@@ -51,7 +51,7 @@ export default function AuditFilter() {
         searchTerm !== "" || statusParam !== "ALL" || kondisiParam !== "ALL";
 
     return (
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-col lg:flex-row gap-4 items-center justify-between">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 mb-6 flex flex-col lg:flex-row gap-4 items-center justify-between">
 
             {/* Kolom Pencarian */}
             <div className="relative w-full lg:max-w-md">
@@ -63,7 +63,7 @@ export default function AuditFilter() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Cari judul, lokasi, atau deskripsi..."
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-red-500 focus:border-red-500 block pl-11 p-3 outline-none transition-all placeholder:text-slate-400 font-medium"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm rounded-xl focus:ring-red-500 focus:border-red-500 block pl-11 p-3 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 font-medium"
                 />
             </div>
 
@@ -77,7 +77,7 @@ export default function AuditFilter() {
                         setKondisiParam(val);
                         createQueryString("kondisi", val);
                     }}
-                    className="bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl focus:ring-red-500 focus:border-red-500 block p-3 pr-8 outline-none cursor-pointer w-full sm:w-auto"
+                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold rounded-xl focus:ring-red-500 focus:border-red-500 block p-3 pr-8 outline-none cursor-pointer w-full sm:w-auto"
                 >
                     <option value="ALL">Semua Kondisi</option>
                     <option value="AMAN">Aman</option>
@@ -92,7 +92,7 @@ export default function AuditFilter() {
                         setStatusParam(val);
                         createQueryString("status", val);
                     }}
-                    className="bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl focus:ring-red-500 focus:border-red-500 block p-3 pr-8 outline-none cursor-pointer w-full sm:w-auto"
+                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold rounded-xl focus:ring-red-500 focus:border-red-500 block p-3 pr-8 outline-none cursor-pointer w-full sm:w-auto"
                 >
                     <option value="ALL">Semua Status</option>
                     <option value="OPEN">Open (Belum Selesai)</option>
@@ -104,7 +104,7 @@ export default function AuditFilter() {
                 {hasActiveFilter && (
                     <button
                         onClick={resetFilter}
-                        className="p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors border border-transparent flex-shrink-0"
+                        className="p-3 text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition-colors border border-transparent flex-shrink-0"
                         title="Hapus Filter"
                     >
                         <FilterX size={20} />

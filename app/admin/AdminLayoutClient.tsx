@@ -23,7 +23,7 @@ export default function AdminLayoutClient({
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-slate-50 relative">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 relative">
       {/* MOBILE OVERLAY */}
       {isMobileOpen && (
         <div 
@@ -53,6 +53,8 @@ export default function AdminLayoutClient({
         <AdminHeader
           userName={userName}
           userRole={userRole}
+          openAuditsCount={openAuditsCount}
+          incidentsCount={incidentsCount}
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
           isMobileOpen={isMobileOpen}

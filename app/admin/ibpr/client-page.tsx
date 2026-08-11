@@ -60,44 +60,44 @@ export default function IbprClientPage({ groupedData }: { groupedData: Record<st
     return (
         <div className="space-y-8">
             {/* Header / Top Action */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                 {selectedLocation ? (
                     <div>
                         <button
                             onClick={() => setSelectedLocation(null)}
-                            className="flex items-center gap-2 text-slate-500 hover:text-blue-600 font-bold transition-colors mb-2 text-sm"
+                            className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-bold transition-colors mb-2 text-sm"
                         >
                             <ArrowLeft size={16} />
                             Kembali ke Daftar Area
                         </button>
-                        <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <MapPin className="text-blue-600" />
+                        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <MapPin className="text-blue-600 dark:text-blue-400" />
                             Area: {selectedLocation}
                         </h1>
                     </div>
                 ) : (
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-800">Dokumen IBPR</h1>
-                        <p className="text-slate-500">Identifikasi Bahaya dan Pengendalian Risiko</p>
+                        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Dokumen IBPR</h1>
+                        <p className="text-slate-500 dark:text-slate-400">Identifikasi Bahaya dan Pengendalian Risiko</p>
                     </div>
                 )}
 
                 <button
                     onClick={handleAddNew}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-blue-200 transition-all active:scale-95 w-full md:w-auto justify-center"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 w-full md:w-auto justify-center"
                 >
                     <Plus size={20} />
-                    {selectedLocation ? "Tambah Aktivitas Bar" : "Tambah Area Baru"}
+                    {selectedLocation ? "Tambah Aktivitas Baru" : "Tambah Area Baru"}
                 </button>
             </div>
 
             {Object.keys(groupedData).length === 0 ? (
-                <div className="text-center py-24 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                    <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="text-center py-24 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+                    <div className="w-16 h-16 bg-blue-50 dark:bg-blue-950/40 text-blue-500 dark:text-blue-400 rounded-full flex items-center justify-center mx-auto mb-4">
                         <FolderOpen size={32} />
                     </div>
-                    <p className="text-slate-900 font-bold text-lg">Belum ada data IBPR.</p>
-                    <p className="text-sm text-slate-500 max-w-md mx-auto mt-2">Data yang Anda tambahkan akan muncul di sini. Mulailah dengan menambahkan area kerja.</p>
+                    <p className="text-slate-900 dark:text-slate-100 font-bold text-lg">Belum ada data IBPR.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto mt-2">Data yang Anda tambahkan akan muncul di sini. Mulailah dengan menambahkan area kerja.</p>
                 </div>
             ) : (
                 <>
@@ -108,26 +108,26 @@ export default function IbprClientPage({ groupedData }: { groupedData: Record<st
                                 <div
                                     key={lokasi}
                                     onClick={() => setSelectedLocation(lokasi)}
-                                    className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-blue-900/5 hover:border-blue-300 transition-all cursor-pointer group flex flex-col h-full"
+                                    className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-xl hover:shadow-blue-900/5 hover:border-blue-300 dark:hover:border-blue-700 transition-all cursor-pointer group flex flex-col h-full"
                                 >
                                     <div className="h-2 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
                                     <div className="p-6 flex-1 flex flex-col">
                                         <div className="flex items-start justify-between mb-4">
-                                            <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shadow-sm">
+                                            <div className="p-3 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-xl group-hover:bg-blue-600 dark:group-hover:bg-blue-600 group-hover:text-white transition-colors shadow-sm">
                                                 <MapPin size={24} />
                                             </div>
-                                            <span className="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full group-hover:bg-blue-100 group-hover:text-blue-700">
+                                            <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-3 py-1 rounded-full group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 group-hover:text-blue-700 dark:group-hover:text-blue-300">
                                                 {items.length} Aktivitas
                                             </span>
                                         </div>
-                                        <h3 className="font-bold text-xl text-slate-800 mb-2 group-hover:text-blue-700 line-clamp-2">
+                                        <h3 className="font-bold text-xl text-slate-800 dark:text-slate-100 mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400 line-clamp-2">
                                             {lokasi}
                                         </h3>
-                                        <p className="text-sm text-slate-500 mb-6 line-clamp-2 flex-1">
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 line-clamp-2 flex-1">
                                             Klik untuk detail bahaya & risiko.
                                         </p>
 
-                                        <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-medium text-slate-600 group-hover:text-blue-600">
+                                        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400">
                                             <span>Lihat Detail</span>
                                             <ChevronRight size={16} />
                                         </div>
@@ -141,11 +141,11 @@ export default function IbprClientPage({ groupedData }: { groupedData: Record<st
                     {selectedLocation && groupedData[selectedLocation] && (
                         <div className="grid grid-cols-1 gap-6 animate-in fade-in slide-in-from-bottom-4">
                             {groupedData[selectedLocation].map((item) => (
-                                <div key={item.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row">
+                                <div key={item.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row">
 
                                     {/* Left: Photo & Info */}
-                                    <div className="w-full md:w-64 bg-slate-50 border-r border-slate-100 flex flex-col p-4 shrink-0">
-                                        <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-white shadow-sm border border-slate-200 mb-3 group">
+                                    <div className="w-full md:w-64 bg-slate-50 dark:bg-slate-800/50 border-r border-slate-100 dark:border-slate-800 flex flex-col p-4 shrink-0">
+                                        <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 mb-3 group">
                                             {item.fotoRuangan ? (
                                                 <>
                                                     <img
@@ -158,28 +158,28 @@ export default function IbprClientPage({ groupedData }: { groupedData: Record<st
                                                     </a>
                                                 </>
                                             ) : (
-                                                <div className="flex items-center justify-center h-full text-slate-300">
+                                                <div className="flex items-center justify-center h-full text-slate-300 dark:text-slate-600">
                                                     <ImageIcon size={32} />
                                                 </div>
                                             )}
                                         </div>
 
-                                        <h3 className="font-bold text-slate-800 text-lg leading-tight mb-2">
+                                        <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight mb-2">
                                             {item.aktivitas}
                                         </h3>
 
                                         <div className="mt-auto pt-3 flex flex-col gap-2">
                                             {item.dokumenIbpr && (
-                                                <a href={item.dokumenIbpr} target="_blank" className="flex items-center justify-center gap-2 w-full bg-red-50 text-red-600 text-xs font-bold py-2 rounded-lg border border-red-100 hover:bg-red-100 transition-colors">
+                                                <a href={item.dokumenIbpr} target="_blank" className="flex items-center justify-center gap-2 w-full bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-xs font-bold py-2 rounded-lg border border-red-100 dark:border-red-900/50 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors">
                                                     <FileText size={14} /> Dokumen PDF
                                                 </a>
                                             )}
 
                                             <div className="grid grid-cols-2 gap-2 mt-2">
-                                                <button onClick={() => handleEdit(item)} className="flex items-center justify-center gap-1 bg-white border border-slate-200 text-slate-600 text-xs font-bold py-2 rounded-lg hover:border-blue-400 hover:text-blue-600 transition-colors">
+                                                <button onClick={() => handleEdit(item)} className="flex items-center justify-center gap-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold py-2 rounded-lg hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                                                     <Edit size={14} /> Edit
                                                 </button>
-                                                <button onClick={() => handleDelete(item.id)} className="flex items-center justify-center gap-1 bg-white border border-slate-200 text-slate-600 text-xs font-bold py-2 rounded-lg hover:border-red-400 hover:text-red-600 transition-colors">
+                                                <button onClick={() => handleDelete(item.id)} className="flex items-center justify-center gap-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold py-2 rounded-lg hover:border-red-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
                                                     <Trash2 size={14} /> Hapus
                                                 </button>
                                             </div>
@@ -187,30 +187,30 @@ export default function IbprClientPage({ groupedData }: { groupedData: Record<st
                                     </div>
 
                                     {/* Right: Details (Hazard, Risk, Control) */}
-                                    <div className="flex-1 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                                    <div className="flex-1 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-slate-800">
                                         <div className="p-5">
-                                            <div className="flex items-center gap-2 mb-3 text-red-600 font-bold text-xs uppercase tracking-wider">
+                                            <div className="flex items-center gap-2 mb-3 text-red-600 dark:text-red-400 font-bold text-xs uppercase tracking-wider">
                                                 <AlertTriangle size={16} /> Bahaya
                                             </div>
-                                            <div className="text-sm text-slate-700 font-medium leading-relaxed">
+                                            <div className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
                                                 {formatText(item.bahaya)}
                                             </div>
                                         </div>
 
-                                        <div className="p-5 bg-gradient-to-b from-transparent to-orange-50/30">
-                                            <div className="flex items-center gap-2 mb-3 text-orange-600 font-bold text-xs uppercase tracking-wider">
+                                        <div className="p-5 bg-gradient-to-b from-transparent to-orange-50/30 dark:to-orange-950/10">
+                                            <div className="flex items-center gap-2 mb-3 text-orange-600 dark:text-orange-400 font-bold text-xs uppercase tracking-wider">
                                                 <Activity size={16} /> Peluang (Risiko)
                                             </div>
-                                            <div className="text-sm text-slate-700 font-medium leading-relaxed">
+                                            <div className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
                                                 {formatText(item.peluang)}
                                             </div>
                                         </div>
 
-                                        <div className="p-5 bg-gradient-to-b from-transparent to-green-50/30">
-                                            <div className="flex items-center gap-2 mb-3 text-green-600 font-bold text-xs uppercase tracking-wider">
+                                        <div className="p-5 bg-gradient-to-b from-transparent to-green-50/30 dark:to-green-950/10">
+                                            <div className="flex items-center gap-2 mb-3 text-green-600 dark:text-green-400 font-bold text-xs uppercase tracking-wider">
                                                 <ShieldCheck size={16} /> Pengendalian
                                             </div>
-                                            <div className="text-sm text-slate-700 font-medium leading-relaxed">
+                                            <div className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
                                                 {formatText(item.penanganan)}
                                             </div>
                                         </div>

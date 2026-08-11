@@ -13,6 +13,7 @@ import {
   Archive,
   Activity,
   FolderArchive,
+  Layers,
   X,
 } from "lucide-react";
 import { logout } from "@/app/actions/auth";
@@ -50,7 +51,7 @@ export default function AdminSidebar({
 
   return (
     <aside
-      className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white border-r border-slate-200 transition-all duration-300 shadow-xl lg:translate-x-0 ${
+      className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-300 shadow-xl lg:translate-x-0 ${
         isCollapsed ? "lg:w-20" : "lg:w-64"
       } ${isMobileOpen ? "translate-x-0 w-64" : "-translate-x-full"}`}
     >
@@ -96,14 +97,14 @@ export default function AdminSidebar({
             isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
           } ${
             checkActive("/admin/dashboard")
-              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm"
-              : "text-slate-600 hover:bg-red-50 hover:text-red-600"
+              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+              : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
           }`}
         >
           <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
             <LayoutDashboard
               size={20}
-              className={checkActive("/admin/dashboard") ? "text-red-600" : "text-slate-400 group-hover:text-red-600 transition-colors"}
+              className={checkActive("/admin/dashboard") || checkActive("/admin/ibpr") || checkActive("/admin/monitoring") || checkActive("/admin/audit") || checkActive("/admin/kecelakaan") || checkActive("/admin/archive") || checkActive("/admin/document-tools") || checkActive("/admin/users") || checkActive("/admin/surat") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
             />
           </div>
           {(!isCollapsed || isMobileOpen) && <span>Dashboard</span>}
@@ -118,14 +119,14 @@ export default function AdminSidebar({
             isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
           } ${
             checkActive("/admin/ibpr")
-              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm"
-              : "text-slate-600 hover:bg-red-50 hover:text-red-600"
+              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+              : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
           }`}
         >
           <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
             <FolderOpen
               size={20}
-              className={checkActive("/admin/ibpr") ? "text-red-600" : "text-slate-400 group-hover:text-red-600 transition-colors"}
+              className={checkActive("/admin/ibpr") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
             />
           </div>
           {(!isCollapsed || isMobileOpen) && <span>Dokumen IBPR</span>}
@@ -140,14 +141,14 @@ export default function AdminSidebar({
             isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
           } ${
             checkActive("/admin/monitoring")
-              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm"
-              : "text-slate-600 hover:bg-red-50 hover:text-red-600"
+              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+              : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
           }`}
         >
           <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
             <Activity
               size={20}
-              className={checkActive("/admin/monitoring") ? "text-red-600" : "text-slate-400 group-hover:text-red-600 transition-colors"}
+              className={checkActive("/admin/monitoring") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
             />
           </div>
           {(!isCollapsed || isMobileOpen) && <span>Monitoring Jam Kerja</span>}
@@ -162,14 +163,14 @@ export default function AdminSidebar({
             isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
           } ${
             checkActive("/admin/audit")
-              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm"
-              : "text-slate-600 hover:bg-red-50 hover:text-red-600"
+              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+              : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
           }`}
         >
           <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
             <FileText
               size={20}
-              className={checkActive("/admin/audit") ? "text-red-600" : "text-slate-400 group-hover:text-red-600 transition-colors"}
+              className={checkActive("/admin/audit") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
             />
             {openAuditsCount > 0 && isCollapsed && !isMobileOpen && (
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
@@ -196,14 +197,14 @@ export default function AdminSidebar({
             isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
           } ${
             checkActive("/admin/kecelakaan")
-              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm"
-              : "text-slate-600 hover:bg-red-50 hover:text-red-600"
+              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+              : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
           }`}
         >
           <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
             <Ambulance
               size={20}
-              className={checkActive("/admin/kecelakaan") ? "text-red-600" : "text-slate-400 group-hover:text-red-600 transition-colors"}
+              className={checkActive("/admin/kecelakaan") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
             />
             {incidentsCount > 0 && isCollapsed && !isMobileOpen && (
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
@@ -230,23 +231,45 @@ export default function AdminSidebar({
             isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
           } ${
             checkActive("/admin/archive")
-              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm"
-              : "text-slate-600 hover:bg-red-50 hover:text-red-600"
+              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+              : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
           }`}
         >
           <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
             <FolderArchive
               size={20}
-              className={checkActive("/admin/archive") ? "text-red-600" : "text-slate-400 group-hover:text-red-600 transition-colors"}
+              className={checkActive("/admin/archive") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
             />
           </div>
           {(!isCollapsed || isMobileOpen) && <span>Arsip Dokumen</span>}
         </Link>
 
+        {/* Document Tools Link */}
+        <Link
+          href="/admin/document-tools"
+          onClick={handleLinkClick}
+          title="Document Tools"
+          className={`flex items-center gap-3 p-3 rounded-xl transition-all group font-medium ${
+            isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
+          } ${
+            checkActive("/admin/document-tools")
+              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+              : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
+          }`}
+        >
+          <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
+            <Layers
+              size={20}
+              className={checkActive("/admin/document-tools") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
+            />
+          </div>
+          {(!isCollapsed || isMobileOpen) && <span>Document Tools</span>}
+        </Link>
+
         {/* Administrator Section */}
         {userRole === "ADMIN" && (
           <>
-            <div className="my-4 border-t border-slate-100"></div>
+            <div className="my-4 border-t border-slate-100 dark:border-slate-800"></div>
             {(!isCollapsed || isMobileOpen) && (
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 ml-3">
                 Administrator
@@ -262,14 +285,14 @@ export default function AdminSidebar({
                 isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
               } ${
                 checkActive("/admin/users")
-                  ? "bg-red-50 text-red-600 border border-red-100 shadow-sm"
-                  : "text-slate-600 hover:bg-red-50 hover:text-red-600"
+                  ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
               }`}
             >
               <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
                 <Users
                   size={20}
-                  className={checkActive("/admin/users") ? "text-red-600" : "text-slate-400 group-hover:text-red-600 transition-colors"}
+                  className={checkActive("/admin/users") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
                 />
               </div>
               {(!isCollapsed || isMobileOpen) && <span>Data Pengguna</span>}
@@ -284,14 +307,14 @@ export default function AdminSidebar({
                 isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
               } ${
                 checkActive("/admin/surat")
-                  ? "bg-red-50 text-red-600 border border-red-100 shadow-sm"
-                  : "text-slate-600 hover:bg-red-50 hover:text-red-600"
+                  ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
               }`}
             >
               <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
                 <Printer
                   size={20}
-                  className={checkActive("/admin/surat") ? "text-red-600" : "text-slate-400 group-hover:text-red-600 transition-colors"}
+                  className={checkActive("/admin/surat") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
                 />
               </div>
               {(!isCollapsed || isMobileOpen) && <span>Buat Surat</span>}
@@ -306,14 +329,14 @@ export default function AdminSidebar({
                 isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
               } ${
                 checkActive("/admin/arsip")
-                  ? "bg-blue-50 text-blue-600 border border-blue-100 shadow-sm"
-                  : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+                  ? "bg-blue-50 text-blue-600 border border-blue-100 shadow-sm dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-950/50"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-800 dark:hover:text-white"
               }`}
             >
               <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
                 <Archive
                   size={20}
-                  className={checkActive("/admin/arsip") ? "text-blue-600" : "text-slate-400 group-hover:text-blue-600 transition-colors"}
+                  className={checkActive("/admin/arsip") ? "text-blue-600 dark:text-blue-400" : "text-slate-400 group-hover:text-blue-600 dark:group-hover:text-white transition-colors"}
                 />
               </div>
               {(!isCollapsed || isMobileOpen) && <span>Arsip Surat</span>}
@@ -322,22 +345,6 @@ export default function AdminSidebar({
         )}
       </nav>
 
-      {/* --- FOOTER SIDEBAR --- */}
-      <div className="p-4 bg-slate-50 border-t border-slate-100 shrink-0">
-        <button
-          onClick={() => logout()}
-          title="Keluar"
-          className="w-full bg-white border border-slate-200 text-slate-600 p-3 rounded-xl flex items-center justify-center transition-all shadow-sm font-bold text-sm group hover:bg-red-600 hover:text-white hover:border-red-600"
-        >
-          <div className="w-5 h-5 flex items-center justify-center shrink-0">
-            <LogOut
-              size={18}
-              className="group-hover:text-white text-slate-400 transition"
-            />
-          </div>
-          {(!isCollapsed || isMobileOpen) && <span className="ml-2">Keluar</span>}
-        </button>
-      </div>
     </aside>
   );
 }

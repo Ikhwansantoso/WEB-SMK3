@@ -76,21 +76,21 @@ export default function IbprForm({
 
     return (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-            <div className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl relative animate-in fade-in zoom-in duration-200 h-[90vh] overflow-y-auto custom-scrollbar border border-slate-100">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative animate-in fade-in zoom-in duration-200 h-[90vh] overflow-y-auto custom-scrollbar border border-slate-100 dark:border-slate-800">
                 <button
                     onClick={onClose}
-                    className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition-colors"
+                    className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                     <X size={20} />
                 </button>
 
-                <h2 className="text-xl font-bold mb-6 text-slate-800 border-b pb-4">
+                <h2 className="text-xl font-bold mb-6 text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-4">
                     {modalTitle}
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                        <label className="text-xs font-bold uppercase text-slate-500 mb-2 block tracking-wider">Lokasi / Area</label>
+                        <label className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block tracking-wider">Lokasi / Area</label>
                         <input
                             name="lokasi"
                             defaultValue={initialData?.lokasi || prefilledLocation || ""}
@@ -98,69 +98,69 @@ export default function IbprForm({
                             readOnly={!!prefilledLocation && !initialData}
                             placeholder="Contoh: Gudang B3"
                             className={`w-full border rounded-xl p-3 text-sm outline-none transition-all ${(prefilledLocation && !initialData)
-                                    ? "bg-slate-100 text-slate-500 border-slate-200 cursor-not-allowed"
-                                    : "bg-gray-50 border-gray-300 text-gray-900 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                    ? "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 cursor-not-allowed"
+                                    : "bg-gray-50 dark:bg-slate-800 border-gray-300 dark:border-slate-700 text-gray-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/40"
                                 }`}
                         />
                         {prefilledLocation && !initialData && (
-                            <p className="text-[10px] text-blue-600 mt-1 italic font-medium">
+                            <p className="text-[10px] text-blue-600 dark:text-blue-400 mt-1 italic font-medium">
                                 * Lokasi otomatis terkunci sesuai area yang dipilih.
                             </p>
                         )}
                     </div>
 
                     <div>
-                        <label className="text-xs font-bold uppercase text-slate-500 mb-2 block tracking-wider">Aktivitas</label>
+                        <label className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block tracking-wider">Aktivitas</label>
                         <input
                             name="aktivitas"
                             defaultValue={initialData?.aktivitas}
                             required
                             placeholder="Contoh: Pengangkatan Limbah"
-                            className="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all font-medium"
+                            className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl p-3 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/40 transition-all font-medium"
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="text-xs font-bold uppercase text-slate-500 mb-2 block tracking-wider">Bahaya</label>
+                            <label className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block tracking-wider">Bahaya</label>
                             <textarea
                                 name="bahaya"
                                 defaultValue={initialData?.bahaya}
                                 required
                                 rows={4}
                                 placeholder="Contoh: Terpeleset"
-                                className="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none"
+                                className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl p-3 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/40 transition-all resize-none"
                             />
                         </div>
                         <div>
-                            <label className="text-xs font-bold uppercase text-slate-500 mb-2 block tracking-wider">Peluang (Risiko)</label>
+                            <label className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block tracking-wider">Peluang (Risiko)</label>
                             <textarea
                                 name="peluang"
                                 defaultValue={initialData?.peluang}
                                 required
                                 rows={4}
                                 placeholder="Contoh: Cedera Punggung"
-                                className="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none"
+                                className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl p-3 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/40 transition-all resize-none"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="text-xs font-bold uppercase text-slate-500 mb-2 block tracking-wider">Pengendalian (Penanganan)</label>
+                        <label className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2 block tracking-wider">Pengendalian (Penanganan)</label>
                         <textarea
                             name="penanganan"
                             defaultValue={initialData?.penanganan}
                             required
                             rows={3}
                             placeholder="Contoh: Pakai APD"
-                            className="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none"
+                            className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl p-3 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/40 transition-all resize-none"
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                         {/* Foto Upload */}
                         <div className="relative group">
-                            <label className={`w-full flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-xl cursor-pointer transition-all overflow-hidden ${photoPreview ? 'border-blue-500 bg-blue-50' : 'border-slate-300 bg-slate-50 hover:bg-blue-50 hover:border-blue-400'}`}>
+                            <label className={`w-full flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-xl cursor-pointer transition-all overflow-hidden ${photoPreview ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20' : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-blue-50/50 dark:hover:bg-slate-800/80 hover:border-blue-400'}`}>
                                 {photoPreview ? (
                                     <div className="relative w-full h-full group-hover:opacity-50 transition-opacity">
                                         <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
@@ -169,7 +169,7 @@ export default function IbprForm({
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex flex-col items-center justify-center pt-5 pb-6 text-slate-400 group-hover:text-blue-500">
+                                    <div className="flex flex-col items-center justify-center pt-5 pb-6 text-slate-400 dark:text-slate-400 group-hover:text-blue-500">
                                         <ImageIcon size={24} className="mb-2" />
                                         <p className="text-xs font-semibold">Upload Foto</p>
                                         <p className="text-[10px]">JPG, PNG (Max 5MB)</p>
@@ -177,20 +177,20 @@ export default function IbprForm({
                                 )}
                                 <input type="file" name="foto" accept="image/*" className="hidden" onChange={handlePhotoChange} />
                             </label>
-                            {photoPreview && <div className="text-center mt-1 text-[10px] text-blue-600 font-bold flex items-center justify-center gap-1"><CheckCircle size={10} /> Foto Terpilih</div>}
+                            {photoPreview && <div className="text-center mt-1 text-[10px] text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center gap-1"><CheckCircle size={10} /> Foto Terpilih</div>}
                         </div>
 
                         {/* PDF Upload */}
                         <div className="relative group">
-                            <label className={`w-full flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-xl cursor-pointer transition-all ${pdfName ? 'border-red-500 bg-red-50' : 'border-slate-300 bg-slate-50 hover:bg-red-50 hover:border-red-400'}`}>
+                            <label className={`w-full flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-xl cursor-pointer transition-all ${pdfName ? 'border-red-500 bg-red-50 dark:bg-red-950/20' : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-red-50/50 dark:hover:bg-slate-800/80 hover:border-red-400'}`}>
                                 {pdfName ? (
                                     <div className="flex flex-col items-center justify-center px-4 text-center">
                                         <FileText size={32} className="text-red-500 mb-2" />
-                                        <p className="text-xs font-bold text-red-700 line-clamp-2 break-all">{pdfName}</p>
+                                        <p className="text-xs font-bold text-red-700 dark:text-red-400 line-clamp-2 break-all">{pdfName}</p>
                                         <p className="text-[10px] text-red-500 mt-1">Klik untuk ganti</p>
                                     </div>
                                 ) : (
-                                    <div className="flex flex-col items-center justify-center pt-5 pb-6 text-slate-400 group-hover:text-red-500">
+                                    <div className="flex flex-col items-center justify-center pt-5 pb-6 text-slate-400 dark:text-slate-400 group-hover:text-red-500">
                                         <FileText size={24} className="mb-2" />
                                         <p className="text-xs font-semibold">Upload PDF</p>
                                         <p className="text-[10px]">(Opsional)</p>
@@ -198,14 +198,14 @@ export default function IbprForm({
                                 )}
                                 <input type="file" name="dokumen" accept="application/pdf" className="hidden" onChange={handlePdfChange} />
                             </label>
-                            {pdfName && <div className="text-center mt-1 text-[10px] text-red-600 font-bold flex items-center justify-center gap-1"><CheckCircle size={10} /> PDF Terpilih</div>}
+                            {pdfName && <div className="text-center mt-1 text-[10px] text-red-600 dark:text-red-400 font-bold flex items-center justify-center gap-1"><CheckCircle size={10} /> PDF Terpilih</div>}
                         </div>
                     </div>
 
                     <div className="pt-6">
                         <button
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3.5 rounded-xl flex justify-center items-center gap-2 transition-all shadow-md shadow-blue-200 active:scale-[0.98]"
+                            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3.5 rounded-xl flex justify-center items-center gap-2 transition-all shadow-md shadow-blue-200 dark:shadow-none active:scale-[0.98]"
                         >
                             {loading ? <Loader2 className="animate-spin" size={20} /> : <><Save size={18} /> Simpan Data</>}
                         </button>

@@ -106,15 +106,15 @@ export default async function AdminDashboard() {
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <div className="p-4 md:p-8 space-y-8 bg-slate-50/50 min-h-screen">
+    <div className="p-4 md:p-8 space-y-8 bg-slate-50/50 dark:bg-slate-950/50 min-h-screen">
 
       {/* Baris Atas: Welcome Message */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
         <div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Dashboard Eksekutif</h1>
-          <p className="text-slate-500 text-sm mt-1">Sistem Informasi Monitoring K3 - PT Telkom Indonesia</p>
+          <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Dashboard Eksekutif</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Sistem Informasi Monitoring K3 - PT Telkom Indonesia</p>
         </div>
-        <div className="flex items-center gap-3 bg-red-50 text-red-600 px-4 py-2 rounded-2xl border border-red-100/50 text-sm font-bold shadow-sm">
+        <div className="flex items-center gap-3 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-2xl border border-red-100/50 dark:border-red-900/50 text-sm font-bold shadow-sm">
           <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
           Live Monitoring
         </div>
@@ -124,23 +124,23 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
 
         {/* Card 1: Insiden K3 */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-red-50 dark:bg-red-950/20 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
           <div className="relative z-10 flex flex-col justify-between h-full w-full">
             <div className="flex justify-between items-start w-full">
               <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Insiden K3</p>
-                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalInsiden}</h3>
+                <p className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 inline-block px-3 py-1 rounded-full border border-slate-100 dark:border-slate-700">Insiden K3</p>
+                <h3 className="text-5xl font-black text-slate-800 dark:text-slate-100 mt-4 tracking-tighter">{totalInsiden}</h3>
               </div>
-              <div className="p-3 bg-white/80 backdrop-blur-sm border border-red-100 text-red-600 rounded-2xl shadow-sm drop-shadow-sm">
+              <div className="p-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-2xl shadow-sm drop-shadow-sm">
                 <AlertTriangle size={24} strokeWidth={2.5} />
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-xs font-bold text-red-600 bg-red-50 px-3 py-1.5 rounded-xl border border-red-100 shadow-sm">
+              <span className="text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 px-3 py-1.5 rounded-xl border border-red-100 dark:border-red-900/40 shadow-sm">
                 {totalInsidenOpen} Aktif
               </span>
-              <span className="text-xs font-semibold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
                 {insidenBulanIni} Bulan Ini
               </span>
             </div>
@@ -148,23 +148,23 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Card 2: Total Temuan Audit */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 dark:bg-blue-950/20 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
           <div className="relative z-10 flex flex-col justify-between h-full w-full">
             <div className="flex justify-between items-start w-full">
               <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Temuan Audit</p>
-                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalAudit}</h3>
+                <p className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 inline-block px-3 py-1 rounded-full border border-slate-100 dark:border-slate-700">Temuan Audit</p>
+                <h3 className="text-5xl font-black text-slate-800 dark:text-slate-100 mt-4 tracking-tighter">{totalAudit}</h3>
               </div>
-              <div className="p-3 bg-white/80 backdrop-blur-sm border border-blue-100 text-blue-600 rounded-2xl shadow-sm drop-shadow-sm">
+              <div className="p-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-blue-100 dark:border-blue-900/50 text-blue-600 dark:text-blue-400 rounded-2xl shadow-sm drop-shadow-sm">
                 <FileText size={24} strokeWidth={2.5} />
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100 shadow-sm">
+              <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-3 py-1.5 rounded-xl border border-blue-100 dark:border-blue-900/40 shadow-sm">
                 {totalAuditOpen} Open
               </span>
-              <span className="text-xs font-semibold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
                 {totalAudit - totalAuditOpen} Closed
               </span>
             </div>
@@ -172,20 +172,20 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Card 3: Dokumen IBPR */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 dark:bg-amber-950/20 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
           <div className="relative z-10 flex flex-col justify-between h-full w-full">
             <div className="flex justify-between items-start w-full">
               <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Dokumen IBPR</p>
-                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalIbpr}</h3>
+                <p className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 inline-block px-3 py-1 rounded-full border border-slate-100 dark:border-slate-700">Dokumen IBPR</p>
+                <h3 className="text-5xl font-black text-slate-800 dark:text-slate-100 mt-4 tracking-tighter">{totalIbpr}</h3>
               </div>
-              <div className="p-3 bg-white/80 backdrop-blur-sm border border-amber-100 text-amber-600 rounded-2xl shadow-sm drop-shadow-sm">
+              <div className="p-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-amber-100 dark:border-amber-900/50 text-amber-600 dark:text-amber-400 rounded-2xl shadow-sm drop-shadow-sm">
                 <TrendingUp size={24} strokeWidth={2.5} />
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                 Bahaya & Pengendalian
               </span>
             </div>
@@ -193,20 +193,20 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Card 4: Total SDM */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 dark:bg-emerald-950/20 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
           <div className="relative z-10 flex flex-col justify-between h-full w-full">
             <div className="flex justify-between items-start w-full">
               <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Total SDM</p>
-                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalUser}</h3>
+                <p className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 inline-block px-3 py-1 rounded-full border border-slate-100 dark:border-slate-700">Total SDM</p>
+                <h3 className="text-5xl font-black text-slate-800 dark:text-slate-100 mt-4 tracking-tighter">{totalUser}</h3>
               </div>
-              <div className="p-3 bg-white/80 backdrop-blur-sm border border-emerald-100 text-emerald-600 rounded-2xl shadow-sm drop-shadow-sm">
+              <div className="p-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-emerald-100 dark:border-emerald-900/50 text-emerald-600 dark:text-emerald-400 rounded-2xl shadow-sm drop-shadow-sm">
                 <Users size={24} strokeWidth={2.5} />
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                 Pengguna Sistem Aktif
               </span>
             </div>
@@ -214,20 +214,20 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Card 5: Total Arsip Dokumen */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-red-50 dark:bg-red-950/20 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
           <div className="relative z-10 flex flex-col justify-between h-full w-full">
             <div className="flex justify-between items-start w-full">
               <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Total Arsip</p>
-                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalArchive}</h3>
+                <p className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 inline-block px-3 py-1 rounded-full border border-slate-100 dark:border-slate-700">Total Arsip</p>
+                <h3 className="text-5xl font-black text-slate-800 dark:text-slate-100 mt-4 tracking-tighter">{totalArchive}</h3>
               </div>
-              <div className="p-3 bg-white/80 backdrop-blur-sm border border-red-100 text-red-600 rounded-2xl shadow-sm drop-shadow-sm">
+              <div className="p-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-2xl shadow-sm drop-shadow-sm">
                 <FolderArchive size={24} strokeWidth={2.5} />
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                 Dokumen Terdaftar
               </span>
             </div>
@@ -235,20 +235,20 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Card 6: Dokumen Sudah Digital */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 dark:bg-green-950/20 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
           <div className="relative z-10 flex flex-col justify-between h-full w-full">
             <div className="flex justify-between items-start w-full">
               <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Sudah Digital</p>
-                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalDigital}</h3>
+                <p className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 inline-block px-3 py-1 rounded-full border border-slate-100 dark:border-slate-700">Sudah Digital</p>
+                <h3 className="text-5xl font-black text-slate-800 dark:text-slate-100 mt-4 tracking-tighter">{totalDigital}</h3>
               </div>
-              <div className="p-3 bg-white/80 backdrop-blur-sm border border-green-100 text-green-600 rounded-2xl shadow-sm drop-shadow-sm">
+              <div className="p-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-green-100 dark:border-green-900/50 text-green-600 dark:text-green-400 rounded-2xl shadow-sm drop-shadow-sm">
                 <FileCheck size={24} strokeWidth={2.5} />
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-xs font-bold text-green-600 bg-green-50/80 px-3 py-1.5 rounded-xl border border-green-100 shadow-sm">
+              <span className="text-xs font-bold text-green-600 dark:text-green-400 bg-green-50/80 dark:bg-green-950/40 px-3 py-1.5 rounded-xl border border-green-100 dark:border-green-900/40 shadow-sm">
                 • {totalDigital} Ter-scan
               </span>
             </div>
@@ -256,20 +256,20 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Card 7: Dokumen Belum Digital */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex items-start justify-between min-h-[160px] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 dark:bg-amber-950/20 rounded-bl-full pointer-events-none transition-transform duration-500 group-hover:scale-110"></div>
           <div className="relative z-10 flex flex-col justify-between h-full w-full">
             <div className="flex justify-between items-start w-full">
               <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 inline-block px-3 py-1 rounded-full border border-slate-100">Belum Digital</p>
-                <h3 className="text-5xl font-black text-slate-800 mt-4 tracking-tighter">{totalNonDigital}</h3>
+                <p className="text-xs font-black text-slate-400 dark:text-slate-300 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 inline-block px-3 py-1 rounded-full border border-slate-100 dark:border-slate-700">Belum Digital</p>
+                <h3 className="text-5xl font-black text-slate-800 dark:text-slate-100 mt-4 tracking-tighter">{totalNonDigital}</h3>
               </div>
-              <div className="p-3 bg-white/80 backdrop-blur-sm border border-amber-100 text-amber-600 rounded-2xl shadow-sm drop-shadow-sm">
+              <div className="p-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-amber-100 dark:border-amber-900/50 text-amber-600 dark:text-amber-400 rounded-2xl shadow-sm drop-shadow-sm">
                 <FileWarning size={24} strokeWidth={2.5} />
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="text-xs font-bold text-amber-600 bg-amber-50/80 px-3 py-1.5 rounded-xl border border-amber-100 shadow-sm">
+              <span className="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50/80 dark:bg-amber-950/40 px-3 py-1.5 rounded-xl border border-amber-100 dark:border-amber-900/40 shadow-sm">
                 • {totalNonDigital} Belum Ter-scan
               </span>
             </div>
@@ -282,17 +282,17 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Main Chart Card */}
-        <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 flex flex-col relative overflow-hidden">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 flex flex-col relative overflow-hidden">
           <div className="flex items-center justify-between mb-8 relative z-10">
             <div>
-              <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 Tren Laporan Insiden K3
               </h3>
-              <p className="text-slate-500 text-sm mt-1">Akumulasi insiden dilaporkan per bulan sepanjang tahun {currentYear}</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Akumulasi insiden dilaporkan per bulan sepanjang tahun {currentYear}</p>
             </div>
             <Link
               href="/admin/kecelakaan"
-              className="hidden md:inline-flex text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl border border-red-100 transition-colors"
+              className="hidden md:inline-flex text-sm font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/40 px-4 py-2 rounded-xl border border-red-100 dark:border-red-950/50 transition-colors"
               prefetch={false}
             >
               Lihat Detail Laporan &rarr;

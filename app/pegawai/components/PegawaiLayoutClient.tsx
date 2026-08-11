@@ -17,7 +17,7 @@ export default function PegawaiLayoutClient({
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-slate-50 relative">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 relative">
       {/* MOBILE OVERLAY */}
       {isMobileOpen && (
         <div 
