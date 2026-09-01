@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { KeyRound, Mail, ArrowRight, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { KeyRound, Mail, ArrowRight, ArrowLeft, ShieldCheck } from "lucide-react";
 
 export default function LoginPage() {
   // --- LOGIKA BACKEND ---
@@ -35,6 +36,15 @@ export default function LoginPage() {
   // --- TAMPILAN UI ---
   return (
     <div className="min-h-screen relative font-sans overflow-hidden flex items-center justify-center lg:justify-end p-4 lg:p-0">
+      {/* 0. TOMBOL KEMBALI KE BERANDA (LANDING PAGE) */}
+      <Link
+        href="/"
+        className="absolute top-6 left-6 z-30 flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/25 text-white rounded-full backdrop-blur-md border border-white/25 transition-all duration-300 text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl group"
+      >
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+        <span>Kembali ke Beranda</span>
+      </Link>
+
       {/* 1. BACKGROUND IMAGE */}
       <div
         className="absolute inset-0 bg-cover bg-center z-0"
@@ -160,6 +170,17 @@ export default function LoginPage() {
                 >
                   MASUK APLIKASI <ArrowRight size={18} />
                 </button>
+
+                {/* Link Kembali ke Landing Page */}
+                <div className="text-center pt-1">
+                  <Link
+                    href="/"
+                    className="inline-flex items-center gap-1.5 text-xs text-red-100 hover:text-white font-medium transition opacity-80 hover:opacity-100"
+                  >
+                    <ArrowLeft size={14} />
+                    <span>Kembali ke Halaman Utama</span>
+                  </Link>
+                </div>
               </form>
             </div>
 
