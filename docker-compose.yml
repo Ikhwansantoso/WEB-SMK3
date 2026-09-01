@@ -1,5 +1,6 @@
 version: "3.8"
 name: smk3-monitoring
+
 services:
   app:
     container_name: smk3-app
@@ -8,22 +9,27 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "3065:3000"
+      # Port aplikasi (bisa diubah via PORT_BIND di .env, default 3065)
+      - "${PORT_BIND:-3065}:3000"
     environment:
-      # PENTING: Ganti 'localhost' jadi 'host.docker.internal'
-      # Sesuaikan USER, PASSWORD, dan NAMA_DB dengan settingan postgres laptop Anda
-      DATABASE_URL: "postgresql://magang:6wx3pVKuM39AwAE2H1ObKeP8@host.docker.internal:5432/smk3_db?schema=public"
+      # Konfigurasi Database:
+      # - Jika dijalankan di LAPTOP: otomatis menggunakan host.docker.internal ke PostgreSQL laptop
+      # - Jika di SERVER: buat file .env di server dan isi DATABASE_URL sesuai database server
+      DATABASE_URL: ${DATABASE_URL:-postgresql://magang:6wx3pVKuM39AwAE2H1ObKeP8@host.docker.internal:5432/smk3_db?schema=public}
 
-      # Jika pakai NextAuth, set URL-nya
-      NEXTAUTH_URL: "http://localhost:3000"
-      NEXTAUTH_SECRET: "rahasia-random-string"
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3065}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-telkom-smk3-secret-key-prod}
+      NODE_ENV: production
 
     volumes:
-      # Mapping folder upload agar file PDF tersimpan di laptop (bukan di dalam container)
+      # VOLUME PERSISTENCE:
+      # Path './public/uploads' bersifat RELATIF terhadap folder proyek:
+      # - Di LAPTOP: berkas masuk ke folder ./public/uploads di laptop Anda.
+      # - Di SERVER: berkas otomatis masuk ke folder ./public/uploads di server Anda.
+      # Berkas tidak akan terhapus meskipun container dimatikan atau di-deploy ulang.
       - ./public/uploads:/app/public/uploads
 
-    # PENTING: Tambahan agar 'host.docker.internal' jalan di server Linux (Ubuntu/CentOS)
+    # Mendukung 'host.docker.internal' baik di Windows/Mac maupun Linux server
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-# Kita hapus bagian 'services: db' dan 'volumes: pgdata' karena sudah pakai punya laptop.

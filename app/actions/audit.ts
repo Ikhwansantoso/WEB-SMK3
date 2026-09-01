@@ -16,26 +16,56 @@ export async function createLaporanTemuan(formData: FormData) {
     const foto = formData.get('foto') as File
     const waktuTemuanString = formData.get('waktuTemuan') as string
     const kondisiInput = formData.get('kondisi') as string
-
     const cookieStore = await cookies()
-    const userId = cookieStore.get("user_id")?.value
+    const rawUserId = cookieStore.get("user_id")?.value
+
+    // Pastikan jika pelaporan dari formulir pegawai, pelapor selalu ber-role PEGAWAI
+    let finalPelaporId: string | null = null
+    if (rawUserId) {
+      const currentUser = await prisma.user.findUnique({ where: { id: rawUserId } })
+      if (currentUser?.role === 'PEGAWAI') {
+        finalPelaporId = currentUser.id
+      }
+    }
+
+    // Fallback jika Admin/Auditor sedang mengetes form pegawai di browser yang sama
+    if (!finalPelaporId) {
+      const defaultPegawai = await prisma.user.findFirst({ where: { role: 'PEGAWAI' } })
+      finalPelaporId = defaultPegawai?.id || rawUserId || null
+    }
+
+    const fotoOriginal = formData.get('fotoOriginal') as File | null
 
     if (!judul || !lokasi) {
       return { success: false, message: "Judul dan Lokasi wajib diisi!" }
     }
 
-    let fotoUrl = null
+    const uploadDir = join(process.cwd(), 'public/uploads')
+    await mkdir(uploadDir, { recursive: true })
+
+    let stampedUrl: string | null = null
     if (foto && foto.size > 0) {
       const bytes = await foto.arrayBuffer()
       const buffer = Buffer.from(bytes)
-      const fileName = `${Date.now()}_${foto.name.replace(/\s/g, '_')}`
-      const uploadDir = join(process.cwd(), 'public/uploads')
-
-      // Pastikan folder ada
-      await mkdir(uploadDir, { recursive: true })
-
+      const fileName = `STAMPED_${Date.now()}_${foto.name.replace(/\s/g, '_')}`
       await writeFile(join(uploadDir, fileName), buffer)
-      fotoUrl = `/uploads/${fileName}`
+      stampedUrl = `/uploads/${fileName}`
+    }
+
+    let originalUrl: string | null = null
+    if (fotoOriginal && fotoOriginal.size > 0) {
+      const bytes = await fotoOriginal.arrayBuffer()
+      const buffer = Buffer.from(bytes)
+      const fileName = `ORIGINAL_${Date.now()}_${fotoOriginal.name.replace(/\s/g, '_')}`
+      await writeFile(join(uploadDir, fileName), buffer)
+      originalUrl = `/uploads/${fileName}`
+    }
+
+    let fotoUrl: string | null = null
+    if (stampedUrl && originalUrl) {
+      fotoUrl = JSON.stringify({ stamped: stampedUrl, original: originalUrl })
+    } else {
+      fotoUrl = stampedUrl || originalUrl || null
     }
 
     const waktuTemuan = waktuTemuanString ? new Date(waktuTemuanString) : new Date()
@@ -55,7 +85,7 @@ export async function createLaporanTemuan(formData: FormData) {
         waktuTemuan: waktuTemuan,
         kondisi: kondisiFinal,
         status: statusOtomatis, // Pakai status otomatis tadi
-        auditorId: userId,
+        auditorId: finalPelaporId,
       }
     })
 

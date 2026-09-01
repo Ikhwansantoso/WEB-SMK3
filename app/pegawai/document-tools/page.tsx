@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import ToolsClient from "@/app/admin/document-tools/ToolsClient"
@@ -12,8 +13,10 @@ export default async function PegawaiDocumentToolsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      <ToolsClient />
+    <div className="space-y-8 font-sans">
+      <Suspense fallback={<div className="p-12 text-center text-sm font-bold text-slate-400">Memuat Document Tools...</div>}>
+        <ToolsClient />
+      </Suspense>
     </div>
   )
 }

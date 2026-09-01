@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { ArrowLeft, Calendar, MapPin, User, CheckCircle, AlertTriangle, Trash2, CheckSquare } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import EvidencePhotoCard from '@/app/components/EvidencePhotoCard'
 
 const prisma = new PrismaClient()
 
@@ -80,9 +81,12 @@ export default async function AuditDetailPage({ params }: { params: { id: string
         {/* Isi Laporan */}
         <div>
             <h3 className="font-bold text-slate-700 mb-2">Deskripsi & Catatan:</h3>
-            <p className="text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <p className="text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6">
                 {audit.deskripsi}
             </p>
+
+            {/* Foto Bukti dengan Opsi Download Ber-Timestamp & Asli */}
+            <EvidencePhotoCard photoData={audit.buktiFoto} title="Foto Bukti Temuan K3" />
         </div>
 
         {/* Bagian Tindakan / Action Button */}

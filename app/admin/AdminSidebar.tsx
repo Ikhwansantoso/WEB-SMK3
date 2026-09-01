@@ -244,27 +244,29 @@ export default function AdminSidebar({
           {(!isCollapsed || isMobileOpen) && <span>Arsip Dokumen</span>}
         </Link>
 
-        {/* Document Tools Link */}
-        <Link
-          href="/admin/document-tools"
-          onClick={handleLinkClick}
-          title="Document Tools"
-          className={`flex items-center gap-3 p-3 rounded-xl transition-all group font-medium ${
-            isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
-          } ${
-            checkActive("/admin/document-tools")
-              ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
-              : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
-          }`}
-        >
-          <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
-            <Layers
-              size={20}
-              className={checkActive("/admin/document-tools") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
-            />
-          </div>
-          {(!isCollapsed || isMobileOpen) && <span>Document Tools</span>}
-        </Link>
+        {/* Document Tools Link (Hanya untuk Admin) */}
+        {userRole === "ADMIN" && (
+          <Link
+            href="/admin/document-tools"
+            onClick={handleLinkClick}
+            title="Document Tools"
+            className={`flex items-center gap-3 p-3 rounded-xl transition-all group font-medium ${
+              isCollapsed && !isMobileOpen ? "justify-center" : "justify-start"
+            } ${
+              checkActive("/admin/document-tools")
+                ? "bg-red-50 text-red-600 border border-red-100 shadow-sm dark:bg-red-950/30 dark:text-red-400 dark:border-red-950/50"
+                : "text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-slate-800 dark:hover:text-white"
+            }`}
+          >
+            <div className="w-5 h-5 flex items-center justify-center shrink-0 relative">
+              <Layers
+                size={20}
+                className={checkActive("/admin/document-tools") ? "text-red-600 dark:text-red-400" : "text-slate-400 group-hover:text-red-600 dark:group-hover:text-white transition-colors"}
+              />
+            </div>
+            {(!isCollapsed || isMobileOpen) && <span>Document Tools</span>}
+          </Link>
+        )}
 
         {/* Administrator Section */}
         {userRole === "ADMIN" && (

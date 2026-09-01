@@ -133,7 +133,14 @@ export const stampImage = async (
       const scale = Math.min(3.0, Math.max(1.0, width / 1000.0));
       
       // Prepare overlay lines
-      const timestamp = new Date(takenAt).toLocaleString('id-ID', {
+      let parsedDate = new Date();
+      if (takenAt) {
+        const d = new Date(takenAt);
+        if (!isNaN(d.getTime())) {
+          parsedDate = d;
+        }
+      }
+      const timestamp = parsedDate.toLocaleString('id-ID', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',

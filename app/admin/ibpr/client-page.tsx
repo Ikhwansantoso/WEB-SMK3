@@ -58,33 +58,45 @@ export default function IbprClientPage({ groupedData }: { groupedData: Record<st
     }
 
     return (
-        <div className="space-y-8">
-            {/* Header / Top Action */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+        <div className="space-y-8 font-sans">
+            {/* HEADER */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
                 {selectedLocation ? (
                     <div>
                         <button
                             onClick={() => setSelectedLocation(null)}
-                            className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-bold transition-colors mb-2 text-sm"
+                            className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 font-bold transition-colors mb-2 text-xs"
                         >
                             <ArrowLeft size={16} />
-                            Kembali ke Daftar Area
+                            Kembali ke Semua Area
                         </button>
-                        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                            <MapPin className="text-blue-600 dark:text-blue-400" />
+                        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-3">
+                            <span className="bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 p-2 rounded-xl">
+                                <MapPin size={32} />
+                            </span>
                             Area: {selectedLocation}
                         </h1>
+                        <p className="text-slate-600 dark:text-slate-400 font-medium mt-1 ml-16">
+                            Daftar kegiatan, potensi bahaya, dan pengendalian risiko di area ini.
+                        </p>
                     </div>
                 ) : (
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Dokumen IBPR</h1>
-                        <p className="text-slate-500 dark:text-slate-400">Identifikasi Bahaya dan Pengendalian Risiko</p>
+                        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-3">
+                            <span className="bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 p-2 rounded-xl">
+                                <FolderOpen size={32} />
+                            </span>
+                            Dokumen IBPR
+                        </h1>
+                        <p className="text-slate-600 dark:text-slate-400 font-medium mt-1 ml-16">
+                            Identifikasi bahaya, penilaian risiko, dan penetapan pengendalian keselamatan kerja (IBPR).
+                        </p>
                     </div>
                 )}
 
                 <button
                     onClick={handleAddNew}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 w-full md:w-auto justify-center"
+                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95 w-full sm:w-auto justify-center shrink-0"
                 >
                     <Plus size={20} />
                     {selectedLocation ? "Tambah Aktivitas Baru" : "Tambah Area Baru"}

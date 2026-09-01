@@ -39,7 +39,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+      <body suppressHydrationWarning className="antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
         <Toaster position="bottom-right" />
         {children}
       </body>

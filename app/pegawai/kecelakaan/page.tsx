@@ -4,16 +4,30 @@ import { useState } from "react"
 import { createLaporanKecelakaan } from "@/app/actions/kecelakaan"
 import { Ambulance, Calendar, MapPin, User, FileText, Loader2, CheckCircle } from "lucide-react"
 import toast from "react-hot-toast"
+import TimestampPhotoInput from "@/app/components/TimestampPhotoInput"
 
 export default function LaporKecelakaanPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [stampedFile, setStampedFile] = useState<File | null>(null)
+  const [originalFile, setOriginalFile] = useState<File | null>(null)
+  const [waktuKejadian, setWaktuKejadian] = useState(() => {
+    const now = new Date()
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+    return now.toISOString().slice(0, 16)
+  })
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
     const form = event.currentTarget // ✅ Amankan referensi form
     const formData = new FormData(form)
+    if (stampedFile) {
+      formData.set('foto', stampedFile)
+    }
+    if (originalFile) {
+      formData.set('fotoOriginal', originalFile)
+    }
 
     // Gunakan toast.promise untuk UX yang lebih baik saat submit
     const submitPromise = createLaporanKecelakaan(formData)
@@ -30,6 +44,11 @@ export default function LaporKecelakaanPage() {
       if (result.success) {
         setSuccess(true)
         form.reset() // ✅ Gunakan variabel 'form' yang aman
+        setStampedFile(null)
+        setOriginalFile(null)
+        const now = new Date()
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+        setWaktuKejadian(now.toISOString().slice(0, 16))
         setTimeout(() => setSuccess(false), 5000)
       } else {
         toast.error(`Gagal mengirim laporan: ${result.message}`)
@@ -84,6 +103,9 @@ export default function LaporKecelakaanPage() {
                 type="datetime-local"
                 name="waktuKejadian"
                 required
+                suppressHydrationWarning
+                value={waktuKejadian}
+                onChange={(e) => setWaktuKejadian(e.target.value)}
                 className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 pl-10 p-3 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-red-500 shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
@@ -140,16 +162,18 @@ export default function LaporKecelakaanPage() {
           </div>
         </div>
 
-        {/* Foto */}
-        <div>
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-1 block">Foto Bukti / Kondisi (Opsional)</label>
-          <input
-            type="file"
-            name="foto"
-            accept="image/*"
-            className="block w-full text-sm text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl cursor-pointer bg-white dark:bg-slate-800 file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 dark:file:bg-slate-700 file:text-white hover:file:bg-slate-900"
-          />
-        </div>
+        {/* Foto Bukti dengan Timestamp Otomatis (Mengikuti Waktu Kejadian) */}
+        <TimestampPhotoInput
+          name="foto"
+          required={false}
+          label="Foto Bukti / Kondisi Insiden (Opsional)"
+          subLabel="Foto otomatis diberi cap GPS & waktu sesuai waktu kejadian di atas."
+          customDate={waktuKejadian}
+          onChange={(stamped, orig) => {
+            setStampedFile(stamped)
+            setOriginalFile(orig)
+          }}
+        />
 
         <button disabled={loading} type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 transition-all active:scale-95 shadow-lg shadow-red-200 dark:shadow-none">
           {loading ? <Loader2 className="animate-spin" /> : "KIRIM LAPORAN INSIDEN"}

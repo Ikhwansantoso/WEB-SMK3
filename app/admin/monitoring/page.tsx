@@ -12,6 +12,7 @@ import {
   ChevronDown,
   FileText,
   Plus,
+  Activity,
 } from "lucide-react";
 import {
   getMonitoringData,
@@ -58,6 +59,7 @@ export default function MonitoringPage() {
       setDataWitel(data);
     } catch (error) {
       console.error(error);
+      toast.error("Gagal memuat data monitoring");
     } finally {
       setLoading(false);
     }
@@ -66,17 +68,26 @@ export default function MonitoringPage() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !selectedCell) return;
+
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("witelId", selectedCell.witelId.toString());
     formData.append("bulanIndex", selectedCell.monthIndex.toString());
     formData.append("tahun", year.toString());
+
+    // Auto calculate status (misal tgl sekarang > 15 dianggap telat jika upload bulan lalu)
+    const currentMonth = new Date().getMonth();
+    const isLate =
+      year < new Date().getFullYear() ||
+      (year === new Date().getFullYear() && selectedCell.monthIndex < currentMonth);
+    formData.append("status", isLate ? "2" : "1");
+
     const res = await uploadLaporan(formData);
     if (res.success) {
-      toast.success("Laporan berhasil diunggah");
+      toast.success("Laporan berhasil diunggah!");
       setModalOpen(false);
-      fetchData();
+      fetchData(); // Refresh UI
     } else {
       toast.error("Gagal mengunggah laporan: " + res.message);
     }
@@ -121,19 +132,24 @@ export default function MonitoringPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-950 font-sans overflow-hidden">
+    <div className="space-y-6 font-sans">
       {/* 1. HEADER */}
-      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex justify-between items-center shrink-0 z-30 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <h1 className="text-xl font-extrabold text-red-600 dark:text-red-400 tracking-tight uppercase">
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-3">
+            <span className="bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 p-2 rounded-xl">
+              <Activity size={32} />
+            </span>
             Monitoring Jam Kerja
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-bold">Telkom Regional 3</p>
+          <p className="text-slate-600 dark:text-slate-400 font-medium mt-1 ml-16">
+            Monitoring laporan bulanan jam kerja & absensi K3 Witel Telkom Regional 3.
+          </p>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {/* Legend */}
-          <div className="flex items-center gap-4 text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center gap-3 text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
             <div className="flex items-center gap-1.5">
               <CheckCircle size={14} className="text-emerald-500" />
               Sudah Lapor
@@ -149,7 +165,7 @@ export default function MonitoringPage() {
             <select
               value={year}
               onChange={(e) => setYear(Number(e.target.value))}
-              className="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-red-500 text-slate-700 dark:text-slate-200 font-bold py-2 pl-4 pr-10 rounded-lg outline-none text-sm cursor-pointer transition shadow-sm"
+              className="appearance-none bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-red-500 text-slate-700 dark:text-slate-200 font-bold py-2.5 pl-4 pr-10 rounded-xl outline-none text-sm cursor-pointer transition shadow-sm"
             >
               <option value={2024}>2024</option>
               <option value={2025}>2025</option>

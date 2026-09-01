@@ -83,9 +83,8 @@ export default function AdminHeader({
     { name: "Monitoring Jam Kerja", href: "/admin/monitoring", keywords: ["jam kerja", "monitoring", "absensi", "lembur"] },
     { name: "Data Audit", href: "/admin/audit", keywords: ["audit", "temuan", "laporan audit", "kepatuhan"] },
     { name: "Laporan Insiden", href: "/admin/kecelakaan", keywords: ["insiden", "kecelakaan", "laporan kecelakaan", "kecelakaan kerja"] },
-    { name: "Arsip Dokumen", href: "/admin/archive", keywords: ["arsip dokumen", "general support", "digitalisasi", "upload scan", "document archive"] },
-    { name: "Document Tools", href: "/admin/document-tools", keywords: ["document tools", "rotate pdf", "merge pdf", "split pdf", "compress pdf", "rotasi"] },
     ...(userRole === "ADMIN" ? [
+      { name: "Document Tools", href: "/admin/document-tools", keywords: ["document tools", "rotate pdf", "merge pdf", "split pdf", "compress pdf", "rotasi"] },
       { name: "Data Pengguna", href: "/admin/users", keywords: ["user", "pengguna", "akun", "tambah user", "auditor", "pegawai"] },
       { name: "Buat Surat", href: "/admin/surat", keywords: ["buat surat", "cetak surat", "template surat", "surat dinas"] },
       { name: "Arsip Surat", href: "/admin/arsip", keywords: ["arsip surat", "surat masuk", "surat keluar"] }
@@ -128,7 +127,7 @@ export default function AdminHeader({
           </h2>
           <div className="flex items-center gap-1.5 text-red-100/80 text-[10px] md:text-xs font-medium mt-0.5">
             <CalendarDays size={11} className="shrink-0" />
-            <span className="truncate">{today}</span>
+            <span className="truncate" suppressHydrationWarning>{today}</span>
           </div>
         </div>
       </div>
@@ -181,14 +180,16 @@ export default function AdminHeader({
           )}
         </div>
 
-        {/* Kamera Timestamp */}
-        <button 
-          onClick={() => setIsTimestampOpen(true)}
-          className="p-2 text-red-100 hover:text-white hover:bg-white/10 rounded-full transition"
-          title="Ambil Kamera Timestamp"
-        >
-          <Camera size={20} />
-        </button>
+        {/* Kamera Timestamp (Hanya untuk ADMIN) */}
+        {userRole === "ADMIN" && (
+          <button 
+            onClick={() => setIsTimestampOpen(true)}
+            className="p-2 text-red-100 hover:text-white hover:bg-white/10 rounded-full transition"
+            title="Ambil Kamera Timestamp"
+          >
+            <Camera size={20} />
+          </button>
+        )}
 
         {/* Toggle Tema (Dark/Light) */}
         <button 
@@ -289,7 +290,9 @@ export default function AdminHeader({
 
       </div>
 
-      <TimestampModal isOpen={isTimestampOpen} onClose={() => setIsTimestampOpen(false)} />
+      {userRole === "ADMIN" && (
+        <TimestampModal isOpen={isTimestampOpen} onClose={() => setIsTimestampOpen(false)} />
+      )}
     </header>
   )
 }

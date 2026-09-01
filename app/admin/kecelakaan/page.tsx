@@ -5,6 +5,7 @@ import Link from 'next/link'
 import DeleteButton from './DeleteButton'
 import MarkDoneButton from './MarkDoneButton'
 import IncidentFilter from './IncidentFilter'
+import EvidencePhotoCard from '@/app/components/EvidencePhotoCard'
 
 const prisma = new PrismaClient()
 
@@ -105,22 +106,22 @@ export default async function KecelakaanPage({
                 {item.kronologi}
               </p>
 
-              {/* GAMBAR BUKTI INSIDEN */}
+              {/* GAMBAR BUKTI INSIDEN DENGAN PILIHAN DOWNLOAD TIMESTAMP & ASLI */}
               {item.fotoBukti && (
                 <div className="mb-4">
-                  <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider block mb-2">Foto Bukti / Lokasi Kejadian</span>
-                  <a href={item.fotoBukti} target="_blank" rel="noreferrer" className="block max-w-[200px] rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow group/img relative bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                    <img src={item.fotoBukti} alt="Bukti Insiden" className="w-full h-auto object-contain max-h-32 group-hover/img:scale-105 transition-transform duration-300" />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="text-white text-xs font-bold bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-sm">Lihat Penuh</span>
-                    </div>
-                  </a>
+                  <EvidencePhotoCard photoData={item.fotoBukti} title="Foto Bukti / Lokasi Kejadian" />
                 </div>
               )}
 
               <div className="mt-4 flex items-center gap-2 text-xs text-slate-400 dark:text-slate-400">
                 <User size={14} />
-                Dilaporkan oleh: <span className="font-bold text-slate-600 dark:text-slate-300">{item.pelapor?.name || 'Pegawai'}</span>
+                Dilaporkan oleh: 
+                <span className="font-bold text-slate-700 dark:text-slate-200">
+                  {item.pelapor?.name || 'Pegawai'}
+                </span>
+                <span className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                  {item.pelapor?.role || 'PEGAWAI'}
+                </span>
                 <span className="mx-1">•</span>
                 {new Date(item.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB
               </div>

@@ -17,7 +17,7 @@ async function main() {
     admin = await prisma.user.create({
       data: {
         email: 'admin@telkom.co.id',
-        name: 'Super Admin Telkom',
+        name: 'Admin Telkom',
         role: Role.ADMIN,
         password: 'admin',
       },
@@ -31,7 +31,7 @@ async function main() {
     auditor = await prisma.user.create({
       data: {
         email: 'auditor@telkom.co.id',
-        name: 'Budi Auditor',
+        name: 'Auditor',
         role: Role.AUDITOR,
         password: '123456',
       },
@@ -44,7 +44,7 @@ async function main() {
     await prisma.user.create({
       data: {
         email: 'pegawai@telkom.co.id',
-        name: 'Asep Teknisi',
+        name: 'Pegawai',
         role: Role.PEGAWAI,
         password: '123456',
       },

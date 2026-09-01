@@ -3,11 +3,19 @@
 import { useState } from "react"
 import { createLaporanTemuan } from "@/app/actions/audit"
 import { MapPin, AlertTriangle, Loader2, CheckCircle, Clock, ShieldCheck, AlertOctagon } from "lucide-react"
+import TimestampPhotoInput from "@/app/components/TimestampPhotoInput"
 
 export default function LaporAuditPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [kondisi, setKondisi] = useState("BUTUH_PERBAIKAN") // Default
+  const [stampedFile, setStampedFile] = useState<File | null>(null)
+  const [originalFile, setOriginalFile] = useState<File | null>(null)
+  const [waktuTemuan, setWaktuTemuan] = useState(() => {
+    const now = new Date()
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+    return now.toISOString().slice(0, 16)
+  })
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -19,6 +27,12 @@ export default function LaporAuditPage() {
 
     // Gunakan variabel 'form' untuk ambil data
     const formData = new FormData(form)
+    if (stampedFile) {
+      formData.set('foto', stampedFile)
+    }
+    if (originalFile) {
+      formData.set('fotoOriginal', originalFile)
+    }
 
     // --- PROSES MENUNGGU (AWAIT) ---
     // Di sini 'event' aslinya akan hangus/hilang
@@ -31,6 +45,11 @@ export default function LaporAuditPage() {
 
       // ✅ 2. GUNAKAN VARIABEL YANG TADI DISIMPAN
       form.reset()
+      setStampedFile(null)
+      setOriginalFile(null)
+      const now = new Date()
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+      setWaktuTemuan(now.toISOString().slice(0, 16))
 
       setKondisi("BUTUH_PERBAIKAN")
       setTimeout(() => setSuccess(false), 3000)
@@ -105,6 +124,9 @@ export default function LaporAuditPage() {
               type="datetime-local"
               name="waktuTemuan"
               required
+              suppressHydrationWarning
+              value={waktuTemuan}
+              onChange={(e) => setWaktuTemuan(e.target.value)}
               className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 pl-10 pr-4 py-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-red-500 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm"
             />
           </div>
@@ -146,17 +168,18 @@ export default function LaporAuditPage() {
           ></textarea>
         </div>
 
-        {/* Input Foto */}
-        <div>
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-1 block">Foto Bukti</label>
-          <input
-            type="file"
-            name="foto"
-            accept="image/*"
-            required={kondisi === "BUTUH_PERBAIKAN"}
-            className="block w-full text-sm text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 rounded-xl cursor-pointer bg-white dark:bg-slate-800 file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 dark:file:bg-slate-700 file:text-white hover:file:bg-slate-900"
-          />
-        </div>
+        {/* Input Foto dengan Timestamp Otomatis (Mengikuti Waktu Inspeksi) */}
+        <TimestampPhotoInput
+          name="foto"
+          required={kondisi === "BUTUH_PERBAIKAN"}
+          label="Foto Bukti Temuan K3"
+          subLabel="Foto otomatis diberi cap GPS & waktu sesuai tanggal inspeksi di atas."
+          customDate={waktuTemuan}
+          onChange={(stamped, orig) => {
+            setStampedFile(stamped)
+            setOriginalFile(orig)
+          }}
+        />
 
         <button
           disabled={loading}

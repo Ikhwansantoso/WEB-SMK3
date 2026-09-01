@@ -7,10 +7,12 @@ import {
     User,
     ExternalLink,
     Inbox,
-    SearchX
+    SearchX,
+    FileText
 } from "lucide-react";
 import TombolAksi from "./TombolAksi";
 import AuditFilter from "./AuditFilter"; // <--- Import Filter Baru
+import EvidenceDownloadDropdown from "@/app/components/EvidenceDownloadDropdown";
 
 function formatDate(date: Date) {
     return new Intl.DateTimeFormat("id-ID", {
@@ -65,13 +67,21 @@ export default async function AdminAuditPage({
     });
 
     return (
-        <div className="p-6 md:p-10 min-h-screen bg-slate-50 dark:bg-slate-950">
-            <div className="flex justify-between items-center mb-8">
+        <div className="space-y-8 font-sans">
+            {/* HEADER */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
                 <div>
-                    <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100">Laporan Audit Masuk</h1>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">Monitoring temuan K3 dari pegawai lapangan.</p>
+                    <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-3">
+                        <span className="bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 p-2 rounded-xl">
+                            <FileText size={32} />
+                        </span>
+                        Data Audit
+                    </h1>
+                    <p className="text-slate-600 dark:text-slate-400 font-medium mt-1 ml-16">
+                        Monitoring temuan audit K3, status tindakan korektif, dan kepatuhan norma keselamatan.
+                    </p>
                 </div>
-                <div className="bg-white dark:bg-slate-900 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm text-sm font-bold text-slate-600 dark:text-slate-300">
+                <div className="bg-white dark:bg-slate-900 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm text-sm font-bold text-slate-600 dark:text-slate-300">
                     Total: {audits.length} Laporan
                 </div>
             </div>
@@ -162,13 +172,7 @@ export default async function AdminAuditPage({
                                         </td>
 
                                         <td className="px-6 py-4 align-top text-center">
-                                            {item.buktiFoto ? (
-                                                <a href={item.buktiFoto} target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-xs font-bold inline-flex items-center gap-1">
-                                                    Lihat <ExternalLink size={12} />
-                                                </a>
-                                            ) : (
-                                                <span className="text-slate-300 dark:text-slate-600 text-xs">-</span>
-                                            )}
+                                            <EvidenceDownloadDropdown photoData={item.buktiFoto} />
                                         </td>
 
                                         {/* KOLOM 6: Tombol Aksi Baru */}

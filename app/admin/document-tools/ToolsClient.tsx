@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useRef, ChangeEvent, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { PDFDocument, degrees } from "pdf-lib"
 import { 
   FolderOpen, X, RefreshCw, Layers, Scissors, Minimize2, 
   Download, ArrowUp, ArrowDown, FileText, CheckCircle2, 
-  Loader2
+  Loader2, FileCheck2
 } from "lucide-react"
 import toast from "react-hot-toast"
 
@@ -23,8 +24,14 @@ interface PageRotateItem {
 }
 
 export default function ToolsClient() {
+  const searchParams = useSearchParams()
+  const filePathParam = searchParams.get('file')
+  const fileNameParam = searchParams.get('name')
+  const tabParam = searchParams.get('tab') as TabType | null
+
   const [activeTab, setActiveTab] = useState<TabType>('rotate')
   const [loading, setLoading] = useState(false)
+  const [loadedFromArchive, setLoadedFromArchive] = useState<string | null>(null)
 
   // Rotate State
   const [rotateFile, setRotateFile] = useState<File | null>(null)
@@ -77,18 +84,8 @@ export default function ToolsClient() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
   }
 
-  // ----------------------------------------------------
-  // ROTATE PDF LOGIC
-  // ----------------------------------------------------
-  const handleRotateFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    if (file.type !== "application/pdf") {
-      toast.error("File harus berupa PDF!")
-      return
-    }
-
+  // Helper untuk proses file PDF ke mode rotate & thumbnail
+  const initRotatePdf = async (file: File) => {
     try {
       setLoading(true)
       const arrayBuffer = await file.arrayBuffer()
@@ -98,7 +95,6 @@ export default function ToolsClient() {
       setRotateFile(file)
       setRotatePageCount(pages.length)
       
-      // Initialize page rotations from current PDF pages
       const initialRotations = pages.map((page, idx) => {
         const currentRot = page.getRotation().angle || 0
         return { pageIndex: idx, rotation: currentRot }
@@ -106,7 +102,6 @@ export default function ToolsClient() {
       setPageRotations(initialRotations)
       setThumbnails({})
 
-      // Generate thumbnails asynchronously using PDF.js
       setTimeout(async () => {
         const pdfjsLib = (window as any)['pdfjs-dist/build/pdf']
         if (pdfjsLib) {
@@ -114,7 +109,6 @@ export default function ToolsClient() {
             const fileUrl = URL.createObjectURL(file)
             const pdf = await pdfjsLib.getDocument(fileUrl).promise
             
-            // Loop through pages and render thumbnails sequentially
             for (let i = 1; i <= pages.length; i++) {
               try {
                 const page = await pdf.getPage(i)
@@ -132,20 +126,92 @@ export default function ToolsClient() {
               } catch (err) {
                 console.error(`Gagal render thumbnail halaman ${i}:`, err)
               }
-              // Kecilkan overhead UI thread dengan delay 30ms
-              await new Promise(resolve => setTimeout(resolve, 30))
+              await new Promise(resolve => setTimeout(resolve, 25))
             }
           } catch (err) {
             console.error("Gagal inisialisasi PDF.js rendering:", err)
           }
         }
-      }, 100)
+      }, 150)
     } catch (err) {
       console.error(err)
       toast.error("Gagal membaca file PDF.")
     } finally {
       setLoading(false)
     }
+  }
+
+  // AUTO-LOAD DOKUMEN ARSIP DARI QUERY PARAMS
+  useEffect(() => {
+    if (tabParam && ['rotate', 'merge', 'split', 'compress'].includes(tabParam)) {
+      setActiveTab(tabParam)
+    }
+
+    if (filePathParam && filePathParam !== loadedFromArchive) {
+      const loadArchiveDocument = async () => {
+        try {
+          setLoading(true)
+          toast.loading("Memuat berkas dari Arsip Dokumen...", { id: "load-archive-doc" })
+
+          const res = await fetch(filePathParam)
+          if (!res.ok) throw new Error("Gagal mengambil file dari server")
+
+          const blob = await res.blob()
+          const cleanName = fileNameParam 
+            ? (fileNameParam.toLowerCase().endsWith('.pdf') ? fileNameParam : `${fileNameParam}.pdf`)
+            : filePathParam.split('/').pop() || 'dokumen_arsip.pdf'
+
+          const file = new File([blob], cleanName, { type: 'application/pdf' })
+
+          setLoadedFromArchive(filePathParam)
+          toast.dismiss("load-archive-doc")
+          toast.success(`Dokumen "${file.name}" otomatis dimuat ke Document Tools!`)
+
+          // 1. Set Rotate
+          await initRotatePdf(file)
+
+          // 2. Set Split
+          const arrayBuffer = await file.arrayBuffer()
+          const pdfDoc = await PDFDocument.load(arrayBuffer)
+          const pagesCount = pdfDoc.getPageCount()
+          setSplitFile(file)
+          setSplitPageCount(pagesCount)
+          setSplitRange(`1-${pagesCount}`)
+
+          // 3. Set Compress
+          setCompressFile(file)
+          setOriginalSize(formatBytes(file.size))
+          setCompressedSize(null)
+
+          // 4. Set Merge
+          setMergeFiles([{ id: `archive-${Date.now()}`, file, pageCount: pagesCount }])
+
+        } catch (error) {
+          toast.dismiss("load-archive-doc")
+          console.error("Error auto-loading archive document:", error)
+          toast.error("Gagal memuat file dokumen arsip secara otomatis.")
+        } finally {
+          setLoading(false)
+        }
+      }
+
+      loadArchiveDocument()
+    }
+  }, [filePathParam, fileNameParam, tabParam, loadedFromArchive])
+
+  // ----------------------------------------------------
+  // ROTATE PDF LOGIC
+  // ----------------------------------------------------
+  const handleRotateFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.type !== "application/pdf") {
+      toast.error("File harus berupa PDF!")
+      return
+    }
+
+    await initRotatePdf(file)
   }
 
   const rotatePage = (index: number) => {
@@ -400,16 +466,18 @@ export default function ToolsClient() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 font-sans">
       
       {/* 1. HEADER */}
-      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 flex items-center gap-3">
-            <Layers className="text-red-600 shrink-0" size={32} />
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-3">
+            <span className="bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 p-2 rounded-xl">
+              <Layers size={32} />
+            </span>
             Document Tools K3
           </h1>
-          <p className="text-slate-500 mt-1 text-sm font-medium">
+          <p className="text-slate-600 dark:text-slate-400 font-medium mt-1 ml-16">
             Manipulasi dokumen PDF secara instan di browser Anda tanpa perlu upload ke server eksternal.
           </p>
         </div>

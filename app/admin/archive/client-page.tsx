@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, ChangeEvent, FormEvent } from "react"
+import Link from "next/link"
 import { createDocumentArchive, updateDocumentArchive, deleteDocumentArchive } from "@/app/actions/documentArchive"
 import {
   Plus, Trash2, Edit, FileText, Image as ImageIcon, Download, Search, Filter,
-  X, Eye, Calendar, FolderArchive, ArrowLeft, Loader2, CheckCircle2, AlertCircle, RefreshCcw
+  X, Eye, Calendar, FolderArchive, ArrowLeft, Loader2, CheckCircle2, AlertCircle, RefreshCcw, Layers
 } from "lucide-react"
 import toast from "react-hot-toast"
 
@@ -150,20 +151,24 @@ export default function ArchiveClientPage({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 font-sans">
       {/* HEADER SECTION */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 flex items-center gap-3">
-            <FolderArchive className="text-red-600 dark:text-red-400 shrink-0" size={32} />
-            Arsip Dokumen K3 & General Support
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-3">
+            <span className="bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 p-2 rounded-xl">
+              <FolderArchive size={32} />
+            </span>
+            Arsip Dokumen
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm font-medium">Digitalisasi, pencarian, dan monitoring dokumen fisik departemen.</p>
+          <p className="text-slate-600 dark:text-slate-400 font-medium mt-1 ml-16">
+            Digitalisasi, pencarian, dan monitoring arsip dokumen fisik departemen.
+          </p>
         </div>
         {canModify && (
           <button
             onClick={handleOpenAdd}
-            className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95 w-full md:w-auto justify-center shrink-0"
+            className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95 w-full sm:w-auto justify-center shrink-0"
           >
             <Plus size={20} />
             Tambah Dokumen
@@ -534,14 +539,42 @@ export default function ArchiveClientPage({
                   </div>
                 </div>
 
-                {detailDoc.filePath && (
-                  <a
-                    href={detailDoc.filePath}
-                    download
-                    className="flex items-center justify-center gap-2 w-full bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 text-sm font-bold py-3 rounded-xl border border-red-200 dark:border-red-900/50 transition-colors shadow-sm"
-                  >
-                    <Download size={16} /> Download File Scan
-                  </a>
+                {detailDoc.filePath ? (
+                  <div className="space-y-2.5 pt-2">
+                    {/* Tombol Buka di Document Tools K3 (Khusus PDF & Admin) */}
+                    {isAdmin && detailDoc.filePath.toLowerCase().endsWith('.pdf') && (
+                      <Link
+                        href={`/admin/document-tools?file=${encodeURIComponent(detailDoc.filePath)}&name=${encodeURIComponent(detailDoc.title)}`}
+                        className="flex items-center justify-center gap-2 w-full bg-slate-900 dark:bg-red-600 hover:bg-slate-800 dark:hover:bg-red-700 text-white text-sm font-bold py-3 rounded-xl transition-all shadow-md shadow-slate-900/10 active:scale-95 group"
+                      >
+                        <Layers size={16} className="text-red-400 dark:text-white group-hover:rotate-12 transition-transform" />
+                        Edit di Document Tools K3
+                      </Link>
+                    )}
+
+                    <a
+                      href={detailDoc.filePath}
+                      download
+                      className="flex items-center justify-center gap-2 w-full bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 text-sm font-bold py-3 rounded-xl border border-red-200 dark:border-red-900/50 transition-colors shadow-sm"
+                    >
+                      <Download size={16} /> Download File Scan
+                    </a>
+                  </div>
+                ) : (
+                  canModify && (
+                    <div className="pt-2">
+                      <button
+                        onClick={() => {
+                          const docToEdit = detailDoc
+                          setDetailDoc(null)
+                          handleOpenEdit(docToEdit)
+                        }}
+                        className="flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 rounded-xl transition shadow"
+                      >
+                        <Plus size={14} /> Upload File Scan Sekarang
+                      </button>
+                    </div>
+                  )
                 )}
               </div>
 
@@ -568,6 +601,18 @@ export default function ArchiveClientPage({
                     <FileText size={48} className="text-slate-300 dark:text-slate-600 mb-2" />
                     <p className="font-bold text-slate-700 dark:text-slate-200">Belum Ada File Scan</p>
                     <p className="text-xs text-slate-400 dark:text-slate-400 mt-1 max-w-xs text-center">Dokumen fisik ini belum melewati proses scanning atau upload file.</p>
+                    {canModify && (
+                      <button
+                        onClick={() => {
+                          const docToEdit = detailDoc
+                          setDetailDoc(null)
+                          handleOpenEdit(docToEdit)
+                        }}
+                        className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5"
+                      >
+                        <Plus size={14} /> Upload Scan Sekarang
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

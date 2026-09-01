@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { writeFile, mkdir } from "fs/promises"
 import { join } from "path"
+import { cookies } from "next/headers"
 
 export async function createLaporanKecelakaan(formData: FormData) {
   try {
@@ -12,23 +13,57 @@ export async function createLaporanKecelakaan(formData: FormData) {
     const kronologi = formData.get('kronologi') as string
     const korban = formData.get('korban') as string
     const waktuString = formData.get('waktuKejadian') as string
-    const foto = formData.get('foto') as File
+    const foto = formData.get('foto') as File | null
+    const fotoOriginal = formData.get('fotoOriginal') as File | null
 
     if (!judul || !waktuString) {
       return { success: false, message: "Data wajib diisi!" }
     }
 
-    let fotoUrl = null
+    const uploadDir = join(process.cwd(), 'public/uploads')
+    await mkdir(uploadDir, { recursive: true })
+
+    let stampedUrl: string | null = null
     if (foto && foto.size > 0) {
       const bytes = await foto.arrayBuffer()
       const buffer = Buffer.from(bytes)
-      const fileName = `KECELAKAAN_${Date.now()}_${foto.name.replace(/\s/g, '_')}`
-
-      const uploadDir = join(process.cwd(), 'public/uploads')
-      await mkdir(uploadDir, { recursive: true })
-
+      const fileName = `KECELAKAAN_STAMPED_${Date.now()}_${foto.name.replace(/\s/g, '_')}`
       await writeFile(join(uploadDir, fileName), buffer)
-      fotoUrl = `/uploads/${fileName}`
+      stampedUrl = `/uploads/${fileName}`
+    }
+
+    let originalUrl: string | null = null
+    if (fotoOriginal && fotoOriginal.size > 0) {
+      const bytes = await fotoOriginal.arrayBuffer()
+      const buffer = Buffer.from(bytes)
+      const fileName = `KECELAKAAN_ORIGINAL_${Date.now()}_${fotoOriginal.name.replace(/\s/g, '_')}`
+      await writeFile(join(uploadDir, fileName), buffer)
+      originalUrl = `/uploads/${fileName}`
+    }
+
+    let fotoUrl: string | null = null
+    if (stampedUrl && originalUrl) {
+      fotoUrl = JSON.stringify({ stamped: stampedUrl, original: originalUrl })
+    } else {
+      fotoUrl = stampedUrl || originalUrl || null
+    }
+
+    const cookieStore = await cookies()
+    const rawUserId = cookieStore.get("user_id")?.value
+
+    // Pastikan jika pelaporan dari formulir pegawai, pelapor selalu ber-role PEGAWAI
+    let finalPelaporId: string | null = null
+    if (rawUserId) {
+      const currentUser = await prisma.user.findUnique({ where: { id: rawUserId } })
+      if (currentUser?.role === 'PEGAWAI') {
+        finalPelaporId = currentUser.id
+      }
+    }
+
+    // Fallback jika Admin/Auditor sedang mengetes form pegawai di browser yang sama
+    if (!finalPelaporId) {
+      const defaultPegawai = await prisma.user.findFirst({ where: { role: 'PEGAWAI' } })
+      finalPelaporId = defaultPegawai?.id || rawUserId || null
     }
 
     await prisma.laporanKecelakaan.create({
@@ -39,6 +74,7 @@ export async function createLaporanKecelakaan(formData: FormData) {
         korban,
         fotoBukti: fotoUrl,
         waktuKejadian: new Date(waktuString),
+        pelaporId: finalPelaporId,
       }
     })
 

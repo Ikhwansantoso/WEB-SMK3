@@ -3,15 +3,18 @@
 import { useState } from "react"
 import SidebarContent from "./SidebarContent"
 import PegawaiHeader from "./PegawaiHeader"
+import { PegawaiReportNotification } from "../layout"
 
 interface PegawaiLayoutClientProps {
   children: React.ReactNode
   userName: string
+  userReports?: PegawaiReportNotification[]
 }
 
 export default function PegawaiLayoutClient({
   children,
-  userName
+  userName,
+  userReports = []
 }: PegawaiLayoutClientProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -44,6 +47,7 @@ export default function PegawaiLayoutClient({
         {/* HEADER */}
         <PegawaiHeader
           userName={userName}
+          userReports={userReports}
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
           isMobileOpen={isMobileOpen}

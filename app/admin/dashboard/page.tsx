@@ -8,6 +8,7 @@ import {
   FolderArchive,
   FileCheck,
   FileWarning,
+  LayoutDashboard,
 } from "lucide-react";
 import IncidentChart from "./IncidentChart";
 import ArchiveCharts from "./ArchiveCharts";
@@ -106,16 +107,22 @@ export default async function AdminDashboard() {
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <div className="p-4 md:p-8 space-y-8 bg-slate-50/50 dark:bg-slate-950/50 min-h-screen">
-
-      {/* Baris Atas: Welcome Message */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
+    <div className="space-y-8 font-sans">
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Dashboard Eksekutif</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Sistem Informasi Monitoring K3 - PT Telkom Indonesia</p>
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-3">
+            <span className="bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 p-2 rounded-xl">
+              <LayoutDashboard size={32} />
+            </span>
+            Dashboard
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400 font-medium mt-1 ml-16">
+            Ringkasan eksekutif dan statistik sistem manajemen keselamatan kerja PT Telkom Indonesia.
+          </p>
         </div>
-        <div className="flex items-center gap-3 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-2xl border border-red-100/50 dark:border-red-900/50 text-sm font-bold shadow-sm">
-          <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
+        <div className="flex items-center gap-2 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 px-4 py-2.5 rounded-xl border border-red-100 dark:border-red-900/50 text-xs font-bold shadow-sm">
+          <span className="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
           Live Monitoring
         </div>
       </div>
