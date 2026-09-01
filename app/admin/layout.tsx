@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import AdminLayoutClient from "./AdminLayoutClient";
 
@@ -16,6 +17,16 @@ export default async function AdminLayout({
   const cookieStore = await cookies();
   const userId = cookieStore.get("user_id")?.value;
   const userRole = cookieStore.get("user_role")?.value || "GUEST";
+
+  // ROUTE GUARD: Harus login terlebih dahulu
+  if (!userId) {
+    redirect("/login");
+  }
+
+  // ROUTE GUARD: Role PEGAWAI tidak boleh masuk ke panel admin
+  if (userRole === "PEGAWAI") {
+    redirect("/pegawai/dashboard");
+  }
 
   let userName = "Admin";
 
