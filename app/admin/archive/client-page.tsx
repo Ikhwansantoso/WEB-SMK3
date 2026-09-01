@@ -29,6 +29,7 @@ const DOCUMENT_TYPES = [
   "Berita Acara",
   "BAST",
   "Dokumen SMK3",
+  "Audit",
   "Dokumen Aset",
   "Memo",
   "Lainnya"
